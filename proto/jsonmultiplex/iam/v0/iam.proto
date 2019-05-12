@@ -11,6 +11,13 @@ service IAM {
       body: "account"
     };
   }
+
+  rpc CreateSession(CreateSessionRequest) returns (Session) {
+    option (google.api.http) = {
+      post: "/v0/sessions"
+      body: "session"
+    };
+  }
 }
 
 message Account {
@@ -24,6 +31,25 @@ message Account {
   string root_password = 5;
 }
 
+message Session {
+  string name = 1;
+  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp expire_time = 3;
+  string account = 4;
+  string user = 5;
+
+  // Write-only field, required only for CreateSession. Never returned to the
+  // client.
+  string password = 6;
+
+  // Read-only field, returned only from CreateSession.
+  string token = 7;
+}
+
 message CreateAccountRequest {
   Account account = 1;
+}
+
+message CreateSessionRequest {
+  Session session = 1;
 }

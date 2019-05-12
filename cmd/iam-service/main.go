@@ -2,15 +2,21 @@ package main
 
 import (
 	"context"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"log"
 	"net"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/jmoiron/sqlx"
-	pb "github.com/json-multiplex/iam/generated/v0"
+	pb "github.com/json-multiplex/iam/generated/jsonmultiplex/iam/v0"
+	"github.com/json-multiplex/iam/internal/models"
 	"github.com/json-multiplex/iam/internal/service"
 	"github.com/json-multiplex/iam/internal/store"
 	_ "github.com/lib/pq"
@@ -22,6 +28,8 @@ import (
 func main() {
 	fs := flag.NewFlagSetWithEnvPrefix(os.Args[0], "IAM_SERVICE", 0)
 	db := fs.String("db", "", "database url")
+	tokenSignKeyPEM := fs.String("token_sign_key", "", "PEM-encoded key for signing tokens")
+	tokenVerifyKeyPEM := fs.String("token_verify_key", "", "PEM-encoded key for verifying tokens")
 	fs.Parse(os.Args[1:])
 
 	dbConn, err := sqlx.Open("postgres", *db)
@@ -33,9 +41,35 @@ func main() {
 		log.Fatalf("failed to ping db: %v", err)
 	}
 
+	var tokenSignKey *rsa.PrivateKey
+	var tokenVerifyKey *rsa.PublicKey
+
+	if block, _ := pem.Decode([]byte(*tokenSignKeyPEM)); block != nil {
+		tokenSignKey, err = x509.ParsePKCS1PrivateKey(block.Bytes)
+		if err != nil {
+			log.Fatalf("error parsing token sign key: %v", err)
+		}
+	}
+
+	if block, _ := pem.Decode([]byte(*tokenVerifyKeyPEM)); block != nil {
+		key, err := x509.ParsePKIXPublicKey(block.Bytes)
+		if err != nil {
+			log.Fatalf("error parsing token verify key: %v", err)
+		}
+
+		var ok bool
+		tokenVerifyKey, ok = key.(*rsa.PublicKey)
+		if !ok {
+			log.Fatalf("verify key must be RSA: %v", err)
+		}
+	}
+
 	srv := server{
 		Service: &service.StoreService{
-			Store: &store.DBStore{DB: dbConn},
+			Store:                 &store.DBStore{DB: dbConn},
+			TokenExpirationPeriod: 24 * time.Hour,
+			TokenSignKey:          tokenSignKey,
+			TokenVerifyKey:        tokenVerifyKey,
 		},
 	}
 
@@ -90,5 +124,39 @@ func (s *server) CreateAccount(ctx context.Context, in *pb.CreateAccountRequest)
 		CreateTime: createTime,
 		UpdateTime: updateTime,
 		DeleteTime: deleteTime,
+	}, nil
+}
+
+func (s *server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest) (*pb.Session, error) {
+	accountID := strings.Split(in.Session.Account, "/")[1]
+	userID := strings.Split(in.Session.User, "/")[1]
+
+	session, err := s.Service.CreateSession(ctx, service.CreateSessionRequest{Session: models.Session{
+		AccountID: accountID,
+		UserID:    userID,
+		Password:  in.Session.Password,
+	}})
+
+	if err != nil {
+		return nil, err
+	}
+
+	createTime, err := ptypes.TimestampProto(session.CreateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	expireTime, err := ptypes.TimestampProto(session.ExpireTime)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.Session{
+		Name:       fmt.Sprintf("sessions/%s", session.ID),
+		Account:    fmt.Sprintf("accounts/%s", session.AccountID),
+		User:       fmt.Sprintf("users/%s", session.UserID),
+		CreateTime: createTime,
+		ExpireTime: expireTime,
+		Token:      session.Token,
 	}, nil
 }

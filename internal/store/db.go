@@ -47,8 +47,33 @@ func (s *DBStore) CreateAccount(ctx context.Context, in CreateAccountRequest) (m
 	}
 
 	return models.Account{
-		ID:         id,
+		ID:         id.String(),
 		CreateTime: createTime,
 		UpdateTime: createTime,
 	}, nil
+}
+
+type dbUser struct {
+	PasswordHash string `db:"password_hash"`
+}
+
+func (s *DBStore) CreateSession(ctx context.Context, in CreateSessionRequest) (models.Session, error) {
+	var user dbUser
+	err := s.DB.GetContext(ctx, &user, `
+		SELECT password_hash FROM users WHERE account_id = $1 AND id = $2;
+	`, in.Session.AccountID, in.Session.UserID)
+
+	if err != nil {
+		return models.Session{}, fmt.Errorf("failed to get user: %v", err)
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(in.Session.Password)); err != nil {
+		return models.Session{}, fmt.Errorf("error comparing hash and password: %v", err)
+	}
+
+	return models.Session{
+		ID:        uuid.New().String(),
+		AccountID: in.Session.AccountID,
+		UserID:    in.Session.UserID,
+	}, err
 }
