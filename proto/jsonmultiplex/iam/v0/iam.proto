@@ -12,6 +12,12 @@ service IAM {
     };
   }
 
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
+    option (google.api.http) = {
+      get: "/v0/users"
+    };
+  }
+
   rpc CreateUser(CreateUserRequest) returns (User) {
     option (google.api.http) = {
       post: "/v0/users"
@@ -66,6 +72,12 @@ message Session {
 
 message CreateAccountRequest {
   Account account = 1;
+}
+
+message ListUsersRequest {}
+
+message ListUsersResponse {
+  repeated User users = 1;
 }
 
 message CreateUserRequest {

@@ -54,7 +54,39 @@ func (s *DBStore) CreateAccount(ctx context.Context, in CreateAccountRequest) (m
 }
 
 type dbUser struct {
-	PasswordHash string `db:"password_hash"`
+	ID           string     `db:"id"`
+	CreateTime   time.Time  `db:"create_time"`
+	UpdateTime   time.Time  `db:"update_time"`
+	DeleteTime   *time.Time `db:"delete_time"`
+	PasswordHash string     `db:"password_hash"`
+}
+
+func (s *DBStore) ListUsers(ctx context.Context, in ListUsersRequest) (ListUsersResponse, error) {
+	var dbUsers []dbUser
+	err := s.DB.SelectContext(ctx, &dbUsers, `
+		SELECT
+			id, create_time, update_time, delete_time
+		FROM
+			users
+		WHERE
+			account_id = $1
+	`, in.AccountID)
+
+	if err != nil {
+		return ListUsersResponse{}, fmt.Errorf("failed to select users: %v", err)
+	}
+
+	users := make([]models.User, len(dbUsers))
+	for i, user := range dbUsers {
+		users[i] = models.User{
+			ID:         user.ID,
+			CreateTime: user.CreateTime,
+			UpdateTime: user.UpdateTime,
+			DeleteTime: user.DeleteTime,
+		}
+	}
+
+	return ListUsersResponse{Users: users}, nil
 }
 
 func (s *DBStore) CreateUser(ctx context.Context, in CreateUserRequest) (models.User, error) {

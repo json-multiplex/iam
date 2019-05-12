@@ -130,23 +130,54 @@ func (s *server) CreateAccount(ctx context.Context, in *pb.CreateAccountRequest)
 	}, nil
 }
 
+func (s *server) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	usersList, err := s.Service.ListUsers(ctx, service.ListUsersRequest{Token: token})
+	if err != nil {
+		return nil, err
+	}
+
+	users := make([]*pb.User, len(usersList.Users))
+	for i, user := range usersList.Users {
+		createTime, err := ptypes.TimestampProto(user.CreateTime)
+		if err != nil {
+			return nil, err
+		}
+
+		updateTime, err := ptypes.TimestampProto(user.UpdateTime)
+		if err != nil {
+			return nil, err
+		}
+
+		var deleteTime *timestamp.Timestamp
+		if user.DeleteTime != nil {
+			var err error
+			deleteTime, err = ptypes.TimestampProto(*user.DeleteTime)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		users[i] = &pb.User{
+			Name:       fmt.Sprintf("users/%s", user.ID),
+			CreateTime: createTime,
+			UpdateTime: updateTime,
+			DeleteTime: deleteTime,
+		}
+	}
+
+	return &pb.ListUsersResponse{Users: users}, nil
+}
+
 func (s *server) CreateUser(ctx context.Context, in *pb.CreateUserRequest) (*pb.User, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Error(codes.Unauthenticated, "no metadata provided")
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
 	}
-
-	authorization := md.Get("Authorization")
-	if len(authorization) != 1 {
-		return nil, status.Error(codes.Unauthenticated, "no authorization provided")
-	}
-
-	authorizationSegments := strings.Split(authorization[0], " ")
-	if len(authorizationSegments) != 2 || authorizationSegments[0] != "Bearer" {
-		return nil, status.Error(codes.Unauthenticated, "invalid authorization header")
-	}
-
-	token := authorizationSegments[1]
 
 	userID := strings.Split(in.User.Name, "/")[1]
 	user, err := s.Service.CreateUser(ctx, service.CreateUserRequest{
@@ -172,9 +203,9 @@ func (s *server) CreateUser(ctx context.Context, in *pb.CreateUserRequest) (*pb.
 	}
 
 	var deleteTime *timestamp.Timestamp
-	if !user.DeleteTime.IsZero() {
+	if user.DeleteTime != nil {
 		var err error
-		deleteTime, err = ptypes.TimestampProto(user.DeleteTime)
+		deleteTime, err = ptypes.TimestampProto(*user.DeleteTime)
 		if err != nil {
 			return nil, err
 		}
@@ -220,4 +251,23 @@ func (s *server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest)
 		ExpireTime: expireTime,
 		Token:      session.Token,
 	}, nil
+}
+
+func (s *server) getToken(ctx context.Context) (string, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return "", status.Error(codes.Unauthenticated, "no metadata provided")
+	}
+
+	authorization := md.Get("Authorization")
+	if len(authorization) != 1 {
+		return "", status.Error(codes.Unauthenticated, "no authorization provided")
+	}
+
+	authorizationSegments := strings.Split(authorization[0], " ")
+	if len(authorizationSegments) != 2 || authorizationSegments[0] != "Bearer" {
+		return "", status.Error(codes.Unauthenticated, "invalid authorization header")
+	}
+
+	return authorizationSegments[1], nil
 }

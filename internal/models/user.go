@@ -6,6 +6,6 @@ type User struct {
 	ID         string
 	CreateTime time.Time
 	UpdateTime time.Time
-	DeleteTime time.Time
+	DeleteTime *time.Time
 	Password   string
 }

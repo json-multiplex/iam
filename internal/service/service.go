@@ -8,6 +8,7 @@ import (
 
 type Service interface {
 	CreateAccount(context.Context, CreateAccountRequest) (models.Account, error)
+	ListUsers(context.Context, ListUsersRequest) (ListUsersResponse, error)
 	CreateUser(context.Context, CreateUserRequest) (models.User, error)
 	CreateSession(context.Context, CreateSessionRequest) (models.Session, error)
 }
@@ -15,6 +16,14 @@ type Service interface {
 type CreateAccountRequest struct {
 	Account      models.Account
 	RootPassword string
+}
+
+type ListUsersRequest struct {
+	Token string
+}
+
+type ListUsersResponse struct {
+	Users []models.User
 }
 
 type CreateUserRequest struct {

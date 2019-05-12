@@ -21,10 +21,30 @@ type StoreService struct {
 }
 
 func (s *StoreService) CreateAccount(ctx context.Context, in CreateAccountRequest) (models.Account, error) {
-	return s.Store.CreateAccount(ctx, store.CreateAccountRequest{
+	account, err := s.Store.CreateAccount(ctx, store.CreateAccountRequest{
 		Account:      in.Account,
 		RootPassword: in.RootPassword,
 	})
+
+	if err != nil {
+		return models.Account{}, fmt.Errorf("error from store: %v", err)
+	}
+
+	return account, err
+}
+
+func (s *StoreService) ListUsers(ctx context.Context, in ListUsersRequest) (ListUsersResponse, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return ListUsersResponse{}, err
+	}
+
+	usersList, err := s.Store.ListUsers(ctx, store.ListUsersRequest{AccountID: claims.Audience})
+	if err != nil {
+		return ListUsersResponse{}, fmt.Errorf("error from store: %v", err)
+	}
+
+	return ListUsersResponse{Users: usersList.Users}, nil
 }
 
 func (s *StoreService) CreateUser(ctx context.Context, in CreateUserRequest) (models.User, error) {
