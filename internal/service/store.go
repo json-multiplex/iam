@@ -47,6 +47,24 @@ func (s *StoreService) ListUsers(ctx context.Context, in ListUsersRequest) (List
 	return ListUsersResponse{Users: usersList.Users}, nil
 }
 
+func (s *StoreService) GetUser(ctx context.Context, in GetUserRequest) (models.User, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	user, err := s.Store.GetUser(ctx, store.GetUserRequest{
+		AccountID: claims.Audience,
+		ID:        in.ID,
+	})
+
+	if err != nil {
+		return models.User{}, fmt.Errorf("error from store: %v", err)
+	}
+
+	return user, nil
+}
+
 func (s *StoreService) CreateUser(ctx context.Context, in CreateUserRequest) (models.User, error) {
 	claims, err := s.parseToken(in.Token)
 	if err != nil {

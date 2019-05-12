@@ -173,6 +173,49 @@ func (s *server) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.Li
 	return &pb.ListUsersResponse{Users: users}, nil
 }
 
+func (s *server) GetUser(ctx context.Context, in *pb.GetUserRequest) (*pb.User, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	userID := strings.Split(in.Name, "/")[1]
+	user, err := s.Service.GetUser(ctx, service.GetUserRequest{
+		ID:    userID,
+		Token: token,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	createTime, err := ptypes.TimestampProto(user.CreateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	updateTime, err := ptypes.TimestampProto(user.UpdateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	var deleteTime *timestamp.Timestamp
+	if user.DeleteTime != nil {
+		var err error
+		deleteTime, err = ptypes.TimestampProto(*user.DeleteTime)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &pb.User{
+		Name:       fmt.Sprintf("users/%s", user.ID),
+		CreateTime: createTime,
+		UpdateTime: updateTime,
+		DeleteTime: deleteTime,
+	}, nil
+}
+
 func (s *server) CreateUser(ctx context.Context, in *pb.CreateUserRequest) (*pb.User, error) {
 	token, err := s.getToken(ctx)
 	if err != nil {

@@ -9,6 +9,7 @@ import (
 type Store interface {
 	CreateAccount(context.Context, CreateAccountRequest) (models.Account, error)
 	ListUsers(context.Context, ListUsersRequest) (ListUsersResponse, error)
+	GetUser(context.Context, GetUserRequest) (models.User, error)
 	CreateUser(context.Context, CreateUserRequest) (models.User, error)
 	CreateSession(context.Context, CreateSessionRequest) (models.Session, error)
 }
@@ -24,6 +25,11 @@ type ListUsersRequest struct {
 
 type ListUsersResponse struct {
 	Users []models.User
+}
+
+type GetUserRequest struct {
+	AccountID string
+	ID        string
 }
 
 type CreateUserRequest struct {

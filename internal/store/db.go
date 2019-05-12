@@ -89,6 +89,29 @@ func (s *DBStore) ListUsers(ctx context.Context, in ListUsersRequest) (ListUsers
 	return ListUsersResponse{Users: users}, nil
 }
 
+func (s *DBStore) GetUser(ctx context.Context, in GetUserRequest) (models.User, error) {
+	var dbUser dbUser
+	err := s.DB.GetContext(ctx, &dbUser, `
+	SELECT
+		id, create_time, update_time, delete_time
+	FROM
+		users
+	WHERE
+		account_id = $1 AND id = $2
+	`, in.AccountID, in.ID)
+
+	if err != nil {
+		return models.User{}, fmt.Errorf("failed to select user: %v", err)
+	}
+
+	return models.User{
+		ID:         dbUser.ID,
+		CreateTime: dbUser.CreateTime,
+		UpdateTime: dbUser.UpdateTime,
+		DeleteTime: dbUser.DeleteTime,
+	}, nil
+}
+
 func (s *DBStore) CreateUser(ctx context.Context, in CreateUserRequest) (models.User, error) {
 	createTime := time.Now()
 
