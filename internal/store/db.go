@@ -2,12 +2,13 @@ package store
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/json-multiplex/iam/internal/models"
-	"github.com/pkg/errors"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type DBStore struct {
@@ -26,7 +27,23 @@ func (s *DBStore) CreateAccount(ctx context.Context, in CreateAccountRequest) (m
 	`, id, createTime)
 
 	if err != nil {
-		return models.Account{}, errors.Wrap(err, "failed to insert into db")
+		return models.Account{}, fmt.Errorf("failed to insert account into db: %v", err)
+	}
+
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(in.RootPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return models.Account{}, fmt.Errorf("failed to bcrypt root password: %v", passwordHash)
+	}
+
+	_, err = s.DB.ExecContext(ctx, `
+		INSERT INTO users
+			(account_id, id, create_time, update_time, delete_time, is_root, password_hash)
+		VALUES
+			($1, 'root', $2, $2, NULL, TRUE, $3);
+	`, id, createTime, passwordHash)
+
+	if err != nil {
+		return models.Account{}, fmt.Errorf("failed to insert root user into db: %v", err)
 	}
 
 	return models.Account{
