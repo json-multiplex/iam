@@ -57,6 +57,32 @@ type dbUser struct {
 	PasswordHash string `db:"password_hash"`
 }
 
+func (s *DBStore) CreateUser(ctx context.Context, in CreateUserRequest) (models.User, error) {
+	createTime := time.Now()
+
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(in.User.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return models.User{}, fmt.Errorf("failed to bcrypt root password: %v", passwordHash)
+	}
+
+	_, err = s.DB.ExecContext(ctx, `
+		INSERT INTO users
+			(account_id, id, create_time, update_time, delete_time, is_root, password_hash)
+		VALUES
+			($1, $2, $3, $3, NULL, FALSE, $4);
+	`, in.AccountID, in.User.ID, createTime, passwordHash)
+
+	if err != nil {
+		return models.User{}, fmt.Errorf("failed to insert user into db: %v", err)
+	}
+
+	return models.User{
+		ID:         in.User.ID,
+		CreateTime: createTime,
+		UpdateTime: createTime,
+	}, nil
+}
+
 func (s *DBStore) CreateSession(ctx context.Context, in CreateSessionRequest) (models.Session, error) {
 	var user dbUser
 	err := s.DB.GetContext(ctx, &user, `

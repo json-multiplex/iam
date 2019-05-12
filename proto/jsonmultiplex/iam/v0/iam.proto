@@ -12,6 +12,13 @@ service IAM {
     };
   }
 
+  rpc CreateUser(CreateUserRequest) returns (User) {
+    option (google.api.http) = {
+      post: "/v0/users"
+      body: "user"
+    };
+  }
+
   rpc CreateSession(CreateSessionRequest) returns (Session) {
     option (google.api.http) = {
       post: "/v0/sessions"
@@ -31,6 +38,17 @@ message Account {
   string root_password = 5;
 }
 
+message User {
+  string name = 1;
+  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp update_time = 3;
+  google.protobuf.Timestamp delete_time = 4;
+
+  // Write-only field, required only for CreateUser and optional for UpdateUser.
+  // Never returned to the client.
+  string password = 6;
+}
+
 message Session {
   string name = 1;
   google.protobuf.Timestamp create_time = 2;
@@ -48,6 +66,10 @@ message Session {
 
 message CreateAccountRequest {
   Account account = 1;
+}
+
+message CreateUserRequest {
+  User user = 1;
 }
 
 message CreateSessionRequest {

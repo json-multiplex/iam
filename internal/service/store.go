@@ -9,6 +9,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/json-multiplex/iam/internal/models"
 	"github.com/json-multiplex/iam/internal/store"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type StoreService struct {
@@ -22,6 +24,18 @@ func (s *StoreService) CreateAccount(ctx context.Context, in CreateAccountReques
 	return s.Store.CreateAccount(ctx, store.CreateAccountRequest{
 		Account:      in.Account,
 		RootPassword: in.RootPassword,
+	})
+}
+
+func (s *StoreService) CreateUser(ctx context.Context, in CreateUserRequest) (models.User, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return s.Store.CreateUser(ctx, store.CreateUserRequest{
+		AccountID: claims.Audience,
+		User:      in.User,
 	})
 }
 
@@ -56,4 +70,17 @@ func (s *StoreService) CreateSession(ctx context.Context, in CreateSessionReques
 		ExpireTime: expireTime,
 		Token:      tokenString,
 	}, nil
+}
+
+func (s *StoreService) parseToken(token string) (*jwt.StandardClaims, error) {
+	parsed, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+			msg := fmt.Sprintf("unexpected token signing method: %v", token.Header["alg"])
+			return nil, status.Error(codes.Unauthenticated, msg)
+		}
+
+		return s.TokenVerifyKey, nil
+	})
+
+	return parsed.Claims.(*jwt.StandardClaims), err
 }
