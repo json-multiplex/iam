@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/jmoiron/sqlx"
 	pb "github.com/json-multiplex/iam/generated/jsonmultiplex/iam/v0"
@@ -260,6 +261,26 @@ func (s *server) CreateUser(ctx context.Context, in *pb.CreateUserRequest) (*pb.
 		UpdateTime: updateTime,
 		DeleteTime: deleteTime,
 	}, nil
+}
+
+func (s *server) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest) (*empty.Empty, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	userID := strings.Split(in.Name, "/")[1]
+
+	err = s.Service.DeleteUser(ctx, service.DeleteUserRequest{
+		Token: token,
+		ID:    userID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
 }
 
 func (s *server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest) (*pb.Session, error) {

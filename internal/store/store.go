@@ -11,6 +11,7 @@ type Store interface {
 	ListUsers(context.Context, ListUsersRequest) (ListUsersResponse, error)
 	GetUser(context.Context, GetUserRequest) (models.User, error)
 	CreateUser(context.Context, CreateUserRequest) (models.User, error)
+	DeleteUser(context.Context, DeleteUserRequest) error
 	CreateSession(context.Context, CreateSessionRequest) (models.Session, error)
 }
 
@@ -35,6 +36,11 @@ type GetUserRequest struct {
 type CreateUserRequest struct {
 	AccountID string
 	User      models.User
+}
+
+type DeleteUserRequest struct {
+	AccountID string
+	ID        string
 }
 
 type CreateSessionRequest struct {

@@ -138,6 +138,18 @@ func (s *DBStore) CreateUser(ctx context.Context, in CreateUserRequest) (models.
 	}, nil
 }
 
+func (s *DBStore) DeleteUser(ctx context.Context, in DeleteUserRequest) error {
+	_, err := s.DB.ExecContext(ctx, `
+		DELETE FROM users WHERE account_id = $1 AND id = $2
+	`, in.AccountID, in.ID)
+
+	if err != nil {
+		return fmt.Errorf("failed to delete user from db: %v", err)
+	}
+
+	return nil
+}
+
 func (s *DBStore) CreateSession(ctx context.Context, in CreateSessionRequest) (models.Session, error) {
 	var user dbUser
 	err := s.DB.GetContext(ctx, &user, `

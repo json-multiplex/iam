@@ -3,6 +3,7 @@ package jsonmultiplex.iam.v0;
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 service IAM {
   rpc CreateAccount(CreateAccountRequest) returns (Account) {
@@ -28,6 +29,12 @@ service IAM {
     option (google.api.http) = {
       post: "/v0/users"
       body: "user"
+    };
+  }
+
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v0/{name=users/*}"
     };
   }
 
@@ -92,6 +99,10 @@ message GetUserRequest {
 
 message CreateUserRequest {
   User user = 1;
+}
+
+message DeleteUserRequest {
+  string name = 1;
 }
 
 message CreateSessionRequest {

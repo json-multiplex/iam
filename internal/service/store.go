@@ -77,6 +77,24 @@ func (s *StoreService) CreateUser(ctx context.Context, in CreateUserRequest) (mo
 	})
 }
 
+func (s *StoreService) DeleteUser(ctx context.Context, in DeleteUserRequest) error {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return err
+	}
+
+	err = s.Store.DeleteUser(ctx, store.DeleteUserRequest{
+		AccountID: claims.Audience,
+		ID:        in.ID,
+	})
+
+	if err != nil {
+		return fmt.Errorf("error from store: %v", err)
+	}
+
+	return nil
+}
+
 func (s *StoreService) CreateSession(ctx context.Context, in CreateSessionRequest) (models.Session, error) {
 	session, err := s.Store.CreateSession(ctx, store.CreateSessionRequest{Session: in.Session})
 	if err != nil {

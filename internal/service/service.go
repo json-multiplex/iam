@@ -11,6 +11,7 @@ type Service interface {
 	ListUsers(context.Context, ListUsersRequest) (ListUsersResponse, error)
 	GetUser(context.Context, GetUserRequest) (models.User, error)
 	CreateUser(context.Context, CreateUserRequest) (models.User, error)
+	DeleteUser(context.Context, DeleteUserRequest) error
 	CreateSession(context.Context, CreateSessionRequest) (models.Session, error)
 }
 
@@ -34,6 +35,11 @@ type GetUserRequest struct {
 
 type CreateUserRequest struct {
 	User  models.User
+	Token string
+}
+
+type DeleteUserRequest struct {
+	ID    string
 	Token string
 }
 
