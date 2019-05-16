@@ -5,11 +5,12 @@ import (
 )
 
 type Session struct {
-	ID         string
-	AccountID  string
-	UserID     string
-	CreateTime time.Time
-	ExpireTime time.Time
-	Password   string
-	Token      string
+	ID          string
+	AccountID   string
+	UserID      string
+	AccessKeyID string
+	CreateTime  time.Time
+	ExpireTime  time.Time
+	Secret      string
+	Token       string
 }

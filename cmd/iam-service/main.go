@@ -446,12 +446,19 @@ func (s *server) DeleteAccessKey(ctx context.Context, in *pb.DeleteAccessKeyRequ
 
 func (s *server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest) (*pb.Session, error) {
 	accountID := strings.Split(in.Session.Account, "/")[1]
-	userID := strings.Split(in.Session.User, "/")[1]
+
+	subjectSegments := strings.Split(in.Session.Subject, "/")
+	userID := subjectSegments[1]
+	var accessKeyID string
+	if len(subjectSegments) == 4 {
+		accessKeyID = subjectSegments[3]
+	}
 
 	session, err := s.Service.CreateSession(ctx, service.CreateSessionRequest{Session: models.Session{
-		AccountID: accountID,
-		UserID:    userID,
-		Password:  in.Session.Password,
+		AccountID:   accountID,
+		UserID:      userID,
+		AccessKeyID: accessKeyID,
+		Secret:      in.Session.Secret,
 	}})
 
 	if err != nil {
@@ -468,10 +475,17 @@ func (s *server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest)
 		return nil, err
 	}
 
+	var subject string
+	if session.AccessKeyID == "" {
+		subject = fmt.Sprintf("users/%s", session.UserID)
+	} else {
+		subject = fmt.Sprintf("users/%s/accessKeys/%s", session.UserID, session.AccessKeyID)
+	}
+
 	return &pb.Session{
 		Name:       fmt.Sprintf("sessions/%s", session.ID),
 		Account:    fmt.Sprintf("accounts/%s", session.AccountID),
-		User:       fmt.Sprintf("users/%s", session.UserID),
+		Subject:    subject,
 		CreateTime: createTime,
 		ExpireTime: expireTime,
 		Token:      session.Token,

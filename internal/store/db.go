@@ -265,22 +265,42 @@ func (s *DBStore) DeleteAccessKey(ctx context.Context, in DeleteAccessKeyRequest
 }
 
 func (s *DBStore) CreateSession(ctx context.Context, in CreateSessionRequest) (models.Session, error) {
-	var user dbUser
-	err := s.DB.GetContext(ctx, &user, `
-		SELECT password_hash FROM users WHERE account_id = $1 AND id = $2;
-	`, in.Session.AccountID, in.Session.UserID)
+	if in.Session.AccessKeyID == "" {
+		var dbUser dbUser
+		err := s.DB.GetContext(ctx, &dbUser, `
+			SELECT password_hash FROM users WHERE account_id = $1 AND id = $2;
+		`, in.Session.AccountID, in.Session.UserID)
 
-	if err != nil {
-		return models.Session{}, fmt.Errorf("failed to get user: %v", err)
-	}
+		if err != nil {
+			return models.Session{}, fmt.Errorf("failed to get user: %v", err)
+		}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(in.Session.Password)); err != nil {
-		return models.Session{}, fmt.Errorf("error comparing hash and password: %v", err)
+		if err := bcrypt.CompareHashAndPassword([]byte(dbUser.PasswordHash), []byte(in.Session.Secret)); err != nil {
+			return models.Session{}, fmt.Errorf("error comparing hash and password: %v", err)
+		}
+	} else {
+		var dbAccessKey dbAccessKey
+		err := s.DB.GetContext(ctx, &dbAccessKey, `
+			SELECT secret_hash FROM access_keys WHERE account_id = $1 AND user_id = $2 AND id = $3
+		`, in.Session.AccountID, in.Session.UserID, in.Session.AccessKeyID)
+
+		if err != nil {
+			return models.Session{}, fmt.Errorf("failed to get access key: %v", err)
+		}
+
+		secret, err := base64.StdEncoding.DecodeString(in.Session.Secret)
+		if err != nil {
+			return models.Session{}, fmt.Errorf("failed to parse secret: %v", err)
+		}
+
+		if err := bcrypt.CompareHashAndPassword([]byte(dbAccessKey.SecretHash), secret); err != nil {
+			return models.Session{}, fmt.Errorf("error comparing hash and secret: %v", err)
+		}
 	}
 
 	return models.Session{
 		ID:        uuid.New().String(),
 		AccountID: in.Session.AccountID,
 		UserID:    in.Session.UserID,
-	}, err
+	}, nil
 }

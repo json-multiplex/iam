@@ -172,8 +172,6 @@ func (s *StoreService) CreateSession(ctx context.Context, in CreateSessionReques
 	createTime := time.Now()
 	expireTime := createTime.Add(s.TokenExpirationPeriod)
 
-	session.Password = ""
-
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, &jwt.StandardClaims{
 		Subject:   in.Session.UserID,
 		Audience:  in.Session.AccountID,

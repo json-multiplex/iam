@@ -108,11 +108,11 @@ message Session {
   google.protobuf.Timestamp create_time = 2;
   google.protobuf.Timestamp expire_time = 3;
   string account = 4;
-  string user = 5;
+  string subject = 5;
 
   // Write-only field, required only for CreateSession. Never returned to the
   // client.
-  string password = 6;
+  string secret = 6;
 
   // Read-only field, returned only from CreateSession.
   string token = 7;
