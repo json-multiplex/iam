@@ -172,8 +172,15 @@ func (s *StoreService) CreateSession(ctx context.Context, in CreateSessionReques
 	createTime := time.Now()
 	expireTime := createTime.Add(s.TokenExpirationPeriod)
 
+	var subject string
+	if in.Session.AccessKeyID == "" {
+		subject = fmt.Sprintf("users/%s", in.Session.UserID)
+	} else {
+		subject = fmt.Sprintf("users/%s/accessKeys/%s", in.Session.UserID, in.Session.AccessKeyID)
+	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, &jwt.StandardClaims{
-		Subject:   in.Session.UserID,
+		Subject:   subject,
 		Audience:  in.Session.AccountID,
 		IssuedAt:  createTime.Unix(),
 		ExpiresAt: expireTime.Unix(),
