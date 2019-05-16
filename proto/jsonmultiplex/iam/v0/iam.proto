@@ -38,6 +38,31 @@ service IAM {
     };
   }
 
+  rpc ListAccessKeys(ListAccessKeysRequest) returns (ListAccessKeysResponse) {
+    option (google.api.http) = {
+      get: "/v0/{parent=users/*}/accessKeys"
+    };
+  }
+
+  rpc GetAccessKey(GetAccessKeyRequest) returns (AccessKey) {
+    option (google.api.http) = {
+      get: "/v0/{name=users/*/accessKeys/*}"
+    };
+  }
+
+  rpc CreateAccessKey(CreateAccessKeyRequest) returns (AccessKey) {
+    option (google.api.http) = {
+      post: "/v0/{parent=users/*}/accessKeys"
+      body: "access_key"
+    };
+  }
+
+  rpc DeleteAccessKey(DeleteAccessKeyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v0/{name=users/*/accessKeys/*}"
+    };
+  }
+
   rpc CreateSession(CreateSessionRequest) returns (Session) {
     option (google.api.http) = {
       post: "/v0/sessions"
@@ -65,7 +90,17 @@ message User {
 
   // Write-only field, required only for CreateUser and optional for UpdateUser.
   // Never returned to the client.
-  string password = 6;
+  string password = 5;
+}
+
+message AccessKey {
+  string name = 1;
+  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp update_time = 3;
+  google.protobuf.Timestamp delete_time = 4;
+
+  // Read-only field, returned only from CreateAccessKey.
+  string secret = 5;
 }
 
 message Session {
@@ -102,6 +137,28 @@ message CreateUserRequest {
 }
 
 message DeleteUserRequest {
+  string name = 1;
+}
+
+message ListAccessKeysRequest {
+  string parent = 1;
+}
+
+message ListAccessKeysResponse {
+  repeated AccessKey access_keys = 1;
+}
+
+message GetAccessKeyRequest {
+  string name = 1;
+}
+
+message CreateAccessKeyRequest {
+  string parent = 1;
+  string access_key_id = 2;
+  AccessKey access_key = 3;
+}
+
+message DeleteAccessKeyRequest {
   string name = 1;
 }
 

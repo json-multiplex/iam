@@ -12,6 +12,10 @@ type Service interface {
 	GetUser(context.Context, GetUserRequest) (models.User, error)
 	CreateUser(context.Context, CreateUserRequest) (models.User, error)
 	DeleteUser(context.Context, DeleteUserRequest) error
+	ListAccessKeys(context.Context, ListAccessKeysRequest) (ListAccessKeysResponse, error)
+	GetAccessKey(context.Context, GetAccessKeyRequest) (models.AccessKey, error)
+	CreateAccessKey(context.Context, CreateAccessKeyRequest) (models.AccessKey, error)
+	DeleteAccessKey(context.Context, DeleteAccessKeyRequest) error
 	CreateSession(context.Context, CreateSessionRequest) (models.Session, error)
 }
 
@@ -41,6 +45,32 @@ type CreateUserRequest struct {
 type DeleteUserRequest struct {
 	ID    string
 	Token string
+}
+
+type ListAccessKeysRequest struct {
+	UserID string
+	Token  string
+}
+
+type ListAccessKeysResponse struct {
+	AccessKeys []models.AccessKey
+}
+
+type GetAccessKeyRequest struct {
+	UserID string
+	ID     string
+	Token  string
+}
+
+type CreateAccessKeyRequest struct {
+	AccessKey models.AccessKey
+	Token     string
+}
+
+type DeleteAccessKeyRequest struct {
+	UserID string
+	ID     string
+	Token  string
 }
 
 type CreateSessionRequest struct {

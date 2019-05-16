@@ -8,4 +8,4 @@ create table users (
   password_hash varchar,
 
   primary key (account_id, id)
-)
+);

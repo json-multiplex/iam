@@ -95,6 +95,74 @@ func (s *StoreService) DeleteUser(ctx context.Context, in DeleteUserRequest) err
 	return nil
 }
 
+func (s *StoreService) ListAccessKeys(ctx context.Context, in ListAccessKeysRequest) (ListAccessKeysResponse, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return ListAccessKeysResponse{}, err
+	}
+
+	accessKeysList, err := s.Store.ListAccessKeys(ctx, store.ListAccessKeysRequest{
+		AccountID: claims.Audience,
+		UserID:    in.UserID,
+	})
+
+	if err != nil {
+		return ListAccessKeysResponse{}, fmt.Errorf("error from store: %v", err)
+	}
+
+	return ListAccessKeysResponse{AccessKeys: accessKeysList.AccessKeys}, nil
+}
+
+func (s *StoreService) GetAccessKey(ctx context.Context, in GetAccessKeyRequest) (models.AccessKey, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return models.AccessKey{}, err
+	}
+
+	accessKey, err := s.Store.GetAccessKey(ctx, store.GetAccessKeyRequest{
+		AccountID: claims.Audience,
+		UserID:    in.UserID,
+		ID:        in.ID,
+	})
+
+	if err != nil {
+		return models.AccessKey{}, fmt.Errorf("error from store: %v", err)
+	}
+
+	return accessKey, nil
+}
+
+func (s *StoreService) CreateAccessKey(ctx context.Context, in CreateAccessKeyRequest) (models.AccessKey, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return models.AccessKey{}, err
+	}
+
+	return s.Store.CreateAccessKey(ctx, store.CreateAccessKeyRequest{
+		AccountID: claims.Audience,
+		AccessKey: in.AccessKey,
+	})
+}
+
+func (s *StoreService) DeleteAccessKey(ctx context.Context, in DeleteAccessKeyRequest) error {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return err
+	}
+
+	err = s.Store.DeleteAccessKey(ctx, store.DeleteAccessKeyRequest{
+		AccountID: claims.Audience,
+		UserID:    in.UserID,
+		ID:        in.ID,
+	})
+
+	if err != nil {
+		return fmt.Errorf("error from store: %v", err)
+	}
+
+	return nil
+}
+
 func (s *StoreService) CreateSession(ctx context.Context, in CreateSessionRequest) (models.Session, error) {
 	session, err := s.Store.CreateSession(ctx, store.CreateSessionRequest{Session: in.Session})
 	if err != nil {

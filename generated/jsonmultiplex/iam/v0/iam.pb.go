@@ -107,7 +107,7 @@ type User struct {
 	DeleteTime *timestamp.Timestamp `protobuf:"bytes,4,opt,name=delete_time,json=deleteTime,proto3" json:"delete_time,omitempty"`
 	// Write-only field, required only for CreateUser and optional for UpdateUser.
 	// Never returned to the client.
-	Password             string   `protobuf:"bytes,6,opt,name=password,proto3" json:"password,omitempty"`
+	Password             string   `protobuf:"bytes,5,opt,name=password,proto3" json:"password,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -173,6 +173,78 @@ func (m *User) GetPassword() string {
 	return ""
 }
 
+type AccessKey struct {
+	Name       string               `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	CreateTime *timestamp.Timestamp `protobuf:"bytes,2,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime *timestamp.Timestamp `protobuf:"bytes,3,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	DeleteTime *timestamp.Timestamp `protobuf:"bytes,4,opt,name=delete_time,json=deleteTime,proto3" json:"delete_time,omitempty"`
+	// Read-only field, returned only from CreateAccessKey.
+	Secret               string   `protobuf:"bytes,5,opt,name=secret,proto3" json:"secret,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AccessKey) Reset()         { *m = AccessKey{} }
+func (m *AccessKey) String() string { return proto.CompactTextString(m) }
+func (*AccessKey) ProtoMessage()    {}
+func (*AccessKey) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{2}
+}
+
+func (m *AccessKey) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AccessKey.Unmarshal(m, b)
+}
+func (m *AccessKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AccessKey.Marshal(b, m, deterministic)
+}
+func (m *AccessKey) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AccessKey.Merge(m, src)
+}
+func (m *AccessKey) XXX_Size() int {
+	return xxx_messageInfo_AccessKey.Size(m)
+}
+func (m *AccessKey) XXX_DiscardUnknown() {
+	xxx_messageInfo_AccessKey.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AccessKey proto.InternalMessageInfo
+
+func (m *AccessKey) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *AccessKey) GetCreateTime() *timestamp.Timestamp {
+	if m != nil {
+		return m.CreateTime
+	}
+	return nil
+}
+
+func (m *AccessKey) GetUpdateTime() *timestamp.Timestamp {
+	if m != nil {
+		return m.UpdateTime
+	}
+	return nil
+}
+
+func (m *AccessKey) GetDeleteTime() *timestamp.Timestamp {
+	if m != nil {
+		return m.DeleteTime
+	}
+	return nil
+}
+
+func (m *AccessKey) GetSecret() string {
+	if m != nil {
+		return m.Secret
+	}
+	return ""
+}
+
 type Session struct {
 	Name       string               `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	CreateTime *timestamp.Timestamp `protobuf:"bytes,2,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
@@ -193,7 +265,7 @@ func (m *Session) Reset()         { *m = Session{} }
 func (m *Session) String() string { return proto.CompactTextString(m) }
 func (*Session) ProtoMessage()    {}
 func (*Session) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{2}
+	return fileDescriptor_73b7e58ef322f61c, []int{3}
 }
 
 func (m *Session) XXX_Unmarshal(b []byte) error {
@@ -274,7 +346,7 @@ func (m *CreateAccountRequest) Reset()         { *m = CreateAccountRequest{} }
 func (m *CreateAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateAccountRequest) ProtoMessage()    {}
 func (*CreateAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{3}
+	return fileDescriptor_73b7e58ef322f61c, []int{4}
 }
 
 func (m *CreateAccountRequest) XXX_Unmarshal(b []byte) error {
@@ -312,7 +384,7 @@ func (m *ListUsersRequest) Reset()         { *m = ListUsersRequest{} }
 func (m *ListUsersRequest) String() string { return proto.CompactTextString(m) }
 func (*ListUsersRequest) ProtoMessage()    {}
 func (*ListUsersRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{4}
+	return fileDescriptor_73b7e58ef322f61c, []int{5}
 }
 
 func (m *ListUsersRequest) XXX_Unmarshal(b []byte) error {
@@ -344,7 +416,7 @@ func (m *ListUsersResponse) Reset()         { *m = ListUsersResponse{} }
 func (m *ListUsersResponse) String() string { return proto.CompactTextString(m) }
 func (*ListUsersResponse) ProtoMessage()    {}
 func (*ListUsersResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{5}
+	return fileDescriptor_73b7e58ef322f61c, []int{6}
 }
 
 func (m *ListUsersResponse) XXX_Unmarshal(b []byte) error {
@@ -383,7 +455,7 @@ func (m *GetUserRequest) Reset()         { *m = GetUserRequest{} }
 func (m *GetUserRequest) String() string { return proto.CompactTextString(m) }
 func (*GetUserRequest) ProtoMessage()    {}
 func (*GetUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{6}
+	return fileDescriptor_73b7e58ef322f61c, []int{7}
 }
 
 func (m *GetUserRequest) XXX_Unmarshal(b []byte) error {
@@ -422,7 +494,7 @@ func (m *CreateUserRequest) Reset()         { *m = CreateUserRequest{} }
 func (m *CreateUserRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateUserRequest) ProtoMessage()    {}
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{7}
+	return fileDescriptor_73b7e58ef322f61c, []int{8}
 }
 
 func (m *CreateUserRequest) XXX_Unmarshal(b []byte) error {
@@ -461,7 +533,7 @@ func (m *DeleteUserRequest) Reset()         { *m = DeleteUserRequest{} }
 func (m *DeleteUserRequest) String() string { return proto.CompactTextString(m) }
 func (*DeleteUserRequest) ProtoMessage()    {}
 func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{8}
+	return fileDescriptor_73b7e58ef322f61c, []int{9}
 }
 
 func (m *DeleteUserRequest) XXX_Unmarshal(b []byte) error {
@@ -489,6 +561,217 @@ func (m *DeleteUserRequest) GetName() string {
 	return ""
 }
 
+type ListAccessKeysRequest struct {
+	Parent               string   `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListAccessKeysRequest) Reset()         { *m = ListAccessKeysRequest{} }
+func (m *ListAccessKeysRequest) String() string { return proto.CompactTextString(m) }
+func (*ListAccessKeysRequest) ProtoMessage()    {}
+func (*ListAccessKeysRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{10}
+}
+
+func (m *ListAccessKeysRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListAccessKeysRequest.Unmarshal(m, b)
+}
+func (m *ListAccessKeysRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListAccessKeysRequest.Marshal(b, m, deterministic)
+}
+func (m *ListAccessKeysRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListAccessKeysRequest.Merge(m, src)
+}
+func (m *ListAccessKeysRequest) XXX_Size() int {
+	return xxx_messageInfo_ListAccessKeysRequest.Size(m)
+}
+func (m *ListAccessKeysRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListAccessKeysRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListAccessKeysRequest proto.InternalMessageInfo
+
+func (m *ListAccessKeysRequest) GetParent() string {
+	if m != nil {
+		return m.Parent
+	}
+	return ""
+}
+
+type ListAccessKeysResponse struct {
+	AccessKeys           []*AccessKey `protobuf:"bytes,1,rep,name=access_keys,json=accessKeys,proto3" json:"access_keys,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
+}
+
+func (m *ListAccessKeysResponse) Reset()         { *m = ListAccessKeysResponse{} }
+func (m *ListAccessKeysResponse) String() string { return proto.CompactTextString(m) }
+func (*ListAccessKeysResponse) ProtoMessage()    {}
+func (*ListAccessKeysResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{11}
+}
+
+func (m *ListAccessKeysResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListAccessKeysResponse.Unmarshal(m, b)
+}
+func (m *ListAccessKeysResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListAccessKeysResponse.Marshal(b, m, deterministic)
+}
+func (m *ListAccessKeysResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListAccessKeysResponse.Merge(m, src)
+}
+func (m *ListAccessKeysResponse) XXX_Size() int {
+	return xxx_messageInfo_ListAccessKeysResponse.Size(m)
+}
+func (m *ListAccessKeysResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListAccessKeysResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListAccessKeysResponse proto.InternalMessageInfo
+
+func (m *ListAccessKeysResponse) GetAccessKeys() []*AccessKey {
+	if m != nil {
+		return m.AccessKeys
+	}
+	return nil
+}
+
+type GetAccessKeyRequest struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetAccessKeyRequest) Reset()         { *m = GetAccessKeyRequest{} }
+func (m *GetAccessKeyRequest) String() string { return proto.CompactTextString(m) }
+func (*GetAccessKeyRequest) ProtoMessage()    {}
+func (*GetAccessKeyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{12}
+}
+
+func (m *GetAccessKeyRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAccessKeyRequest.Unmarshal(m, b)
+}
+func (m *GetAccessKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAccessKeyRequest.Marshal(b, m, deterministic)
+}
+func (m *GetAccessKeyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAccessKeyRequest.Merge(m, src)
+}
+func (m *GetAccessKeyRequest) XXX_Size() int {
+	return xxx_messageInfo_GetAccessKeyRequest.Size(m)
+}
+func (m *GetAccessKeyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAccessKeyRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAccessKeyRequest proto.InternalMessageInfo
+
+func (m *GetAccessKeyRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type CreateAccessKeyRequest struct {
+	Parent               string     `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
+	AccessKeyId          string     `protobuf:"bytes,2,opt,name=access_key_id,json=accessKeyId,proto3" json:"access_key_id,omitempty"`
+	AccessKey            *AccessKey `protobuf:"bytes,3,opt,name=access_key,json=accessKey,proto3" json:"access_key,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *CreateAccessKeyRequest) Reset()         { *m = CreateAccessKeyRequest{} }
+func (m *CreateAccessKeyRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateAccessKeyRequest) ProtoMessage()    {}
+func (*CreateAccessKeyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{13}
+}
+
+func (m *CreateAccessKeyRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateAccessKeyRequest.Unmarshal(m, b)
+}
+func (m *CreateAccessKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateAccessKeyRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateAccessKeyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateAccessKeyRequest.Merge(m, src)
+}
+func (m *CreateAccessKeyRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateAccessKeyRequest.Size(m)
+}
+func (m *CreateAccessKeyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateAccessKeyRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateAccessKeyRequest proto.InternalMessageInfo
+
+func (m *CreateAccessKeyRequest) GetParent() string {
+	if m != nil {
+		return m.Parent
+	}
+	return ""
+}
+
+func (m *CreateAccessKeyRequest) GetAccessKeyId() string {
+	if m != nil {
+		return m.AccessKeyId
+	}
+	return ""
+}
+
+func (m *CreateAccessKeyRequest) GetAccessKey() *AccessKey {
+	if m != nil {
+		return m.AccessKey
+	}
+	return nil
+}
+
+type DeleteAccessKeyRequest struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteAccessKeyRequest) Reset()         { *m = DeleteAccessKeyRequest{} }
+func (m *DeleteAccessKeyRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteAccessKeyRequest) ProtoMessage()    {}
+func (*DeleteAccessKeyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{14}
+}
+
+func (m *DeleteAccessKeyRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteAccessKeyRequest.Unmarshal(m, b)
+}
+func (m *DeleteAccessKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteAccessKeyRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteAccessKeyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteAccessKeyRequest.Merge(m, src)
+}
+func (m *DeleteAccessKeyRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteAccessKeyRequest.Size(m)
+}
+func (m *DeleteAccessKeyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteAccessKeyRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteAccessKeyRequest proto.InternalMessageInfo
+
+func (m *DeleteAccessKeyRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
 type CreateSessionRequest struct {
 	Session              *Session `protobuf:"bytes,1,opt,name=session,proto3" json:"session,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -500,7 +783,7 @@ func (m *CreateSessionRequest) Reset()         { *m = CreateSessionRequest{} }
 func (m *CreateSessionRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateSessionRequest) ProtoMessage()    {}
 func (*CreateSessionRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{9}
+	return fileDescriptor_73b7e58ef322f61c, []int{15}
 }
 
 func (m *CreateSessionRequest) XXX_Unmarshal(b []byte) error {
@@ -531,6 +814,7 @@ func (m *CreateSessionRequest) GetSession() *Session {
 func init() {
 	proto.RegisterType((*Account)(nil), "jsonmultiplex.iam.v0.Account")
 	proto.RegisterType((*User)(nil), "jsonmultiplex.iam.v0.User")
+	proto.RegisterType((*AccessKey)(nil), "jsonmultiplex.iam.v0.AccessKey")
 	proto.RegisterType((*Session)(nil), "jsonmultiplex.iam.v0.Session")
 	proto.RegisterType((*CreateAccountRequest)(nil), "jsonmultiplex.iam.v0.CreateAccountRequest")
 	proto.RegisterType((*ListUsersRequest)(nil), "jsonmultiplex.iam.v0.ListUsersRequest")
@@ -538,52 +822,72 @@ func init() {
 	proto.RegisterType((*GetUserRequest)(nil), "jsonmultiplex.iam.v0.GetUserRequest")
 	proto.RegisterType((*CreateUserRequest)(nil), "jsonmultiplex.iam.v0.CreateUserRequest")
 	proto.RegisterType((*DeleteUserRequest)(nil), "jsonmultiplex.iam.v0.DeleteUserRequest")
+	proto.RegisterType((*ListAccessKeysRequest)(nil), "jsonmultiplex.iam.v0.ListAccessKeysRequest")
+	proto.RegisterType((*ListAccessKeysResponse)(nil), "jsonmultiplex.iam.v0.ListAccessKeysResponse")
+	proto.RegisterType((*GetAccessKeyRequest)(nil), "jsonmultiplex.iam.v0.GetAccessKeyRequest")
+	proto.RegisterType((*CreateAccessKeyRequest)(nil), "jsonmultiplex.iam.v0.CreateAccessKeyRequest")
+	proto.RegisterType((*DeleteAccessKeyRequest)(nil), "jsonmultiplex.iam.v0.DeleteAccessKeyRequest")
 	proto.RegisterType((*CreateSessionRequest)(nil), "jsonmultiplex.iam.v0.CreateSessionRequest")
 }
 
 func init() { proto.RegisterFile("jsonmultiplex/iam/v0/iam.proto", fileDescriptor_73b7e58ef322f61c) }
 
 var fileDescriptor_73b7e58ef322f61c = []byte{
-	// 621 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x55, 0xc1, 0x6e, 0xd3, 0x4a,
-	0x14, 0x95, 0xdb, 0xa6, 0x79, 0xb9, 0x69, 0x9f, 0xc8, 0x28, 0xa2, 0x96, 0xa1, 0x10, 0x0d, 0x15,
-	0xa9, 0xb2, 0xb0, 0xa3, 0xb2, 0x40, 0x0a, 0x62, 0x51, 0x95, 0x0a, 0x21, 0x81, 0x40, 0x01, 0xd6,
-	0x95, 0x9b, 0x0c, 0x91, 0x4b, 0xec, 0x31, 0x9e, 0x71, 0x69, 0x85, 0xd8, 0xf0, 0x0b, 0xfc, 0x06,
-	0x7f, 0xc3, 0x2f, 0xb0, 0x65, 0x8d, 0xd8, 0xa1, 0xb9, 0x33, 0xe3, 0x24, 0xad, 0xeb, 0x74, 0xc3,
-	0x86, 0x55, 0x3c, 0x33, 0xe7, 0xdc, 0x3b, 0xe7, 0x9e, 0x63, 0x07, 0xee, 0x9c, 0x08, 0x9e, 0xc4,
-	0xf9, 0x54, 0x46, 0xe9, 0x94, 0x9d, 0x05, 0x51, 0x18, 0x07, 0xa7, 0x7d, 0xf5, 0xe3, 0xa7, 0x19,
-	0x97, 0x9c, 0xb4, 0x17, 0xce, 0x7d, 0x75, 0x70, 0xda, 0xf7, 0x6e, 0x4f, 0x38, 0x9f, 0x4c, 0x59,
-	0x10, 0xa6, 0x51, 0x10, 0x26, 0x09, 0x97, 0xa1, 0x8c, 0x78, 0x22, 0x34, 0xc7, 0xbb, 0x6b, 0x4e,
-	0x71, 0x75, 0x9c, 0xbf, 0x0b, 0x64, 0x14, 0x33, 0x21, 0xc3, 0x38, 0x35, 0x80, 0x5b, 0x17, 0x01,
-	0x2c, 0x4e, 0xe5, 0xb9, 0x3e, 0xa4, 0xbf, 0x1d, 0xa8, 0xef, 0x8f, 0x46, 0x3c, 0x4f, 0x24, 0x21,
-	0xb0, 0x96, 0x84, 0x31, 0x73, 0x9d, 0x8e, 0xb3, 0xdb, 0x18, 0xe2, 0x33, 0x79, 0x04, 0xcd, 0x51,
-	0xc6, 0x42, 0xc9, 0x8e, 0x54, 0x59, 0x77, 0xa5, 0xe3, 0xec, 0x36, 0xf7, 0x3c, 0x5f, 0x97, 0xf4,
-	0x6d, 0x49, 0xff, 0x8d, 0xed, 0x39, 0x04, 0x0d, 0x57, 0x1b, 0x8a, 0x9c, 0xa7, 0xe3, 0x82, 0xbc,
-	0xba, 0x9c, 0xac, 0xe1, 0x96, 0x3c, 0x66, 0x53, 0x66, 0xc9, 0x6b, 0xcb, 0xc9, 0x1a, 0x8e, 0xe4,
-	0x7b, 0xb0, 0x99, 0x71, 0x2e, 0x8f, 0xd2, 0x50, 0x88, 0x8f, 0x3c, 0x1b, 0xbb, 0x35, 0xd4, 0xb4,
-	0xa1, 0x36, 0x5f, 0x99, 0x3d, 0xfa, 0xd3, 0x81, 0xb5, 0xb7, 0x82, 0x65, 0xff, 0x92, 0x70, 0x0f,
-	0xfe, 0x2b, 0x34, 0xaf, 0xa3, 0x9c, 0x62, 0x4d, 0x7f, 0x39, 0x50, 0x7f, 0xcd, 0x84, 0x88, 0x78,
-	0xf2, 0x57, 0x24, 0xb3, 0xb3, 0x34, 0xca, 0xae, 0x2f, 0x59, 0xc3, 0x91, 0xec, 0x42, 0x3d, 0xd4,
-	0x21, 0x44, 0xb9, 0x8d, 0xa1, 0x5d, 0xaa, 0x7b, 0xe6, 0x82, 0x65, 0xc6, 0x3f, 0x7c, 0xae, 0xd2,
-	0x48, 0xda, 0x50, 0x93, 0xfc, 0x3d, 0x4b, 0xdc, 0x3a, 0x1e, 0xe8, 0x05, 0x7d, 0x09, 0xed, 0x03,
-	0xbc, 0xaa, 0x89, 0xfa, 0x90, 0x7d, 0xc8, 0x99, 0x90, 0xe4, 0xe1, 0xac, 0xaf, 0x83, 0x17, 0xde,
-	0xf6, 0xcb, 0xde, 0x40, 0xdf, 0xd2, 0x2c, 0x9a, 0x12, 0xb8, 0xf1, 0x3c, 0x12, 0x52, 0xa5, 0x47,
-	0x98, 0x62, 0xf4, 0x10, 0x5a, 0x73, 0x7b, 0x22, 0xe5, 0x89, 0x60, 0xa4, 0x0f, 0x35, 0x75, 0x67,
-	0xe1, 0x3a, 0x9d, 0x55, 0x1c, 0x48, 0x69, 0x7d, 0xc5, 0x19, 0x6a, 0x20, 0xdd, 0x81, 0xff, 0x9f,
-	0x32, 0xac, 0x62, 0x6f, 0x59, 0xe2, 0x15, 0x3d, 0x80, 0x96, 0x56, 0x34, 0x0f, 0xf4, 0xcd, 0xb0,
-	0x1c, 0x33, 0xfc, 0xab, 0x7b, 0x21, 0x8e, 0x76, 0xa1, 0xf5, 0x04, 0xa3, 0xb3, 0xac, 0x5b, 0x31,
-	0x3f, 0x13, 0x9f, 0xb9, 0xf9, 0x09, 0xbd, 0x53, 0x3d, 0x3f, 0x4b, 0xb3, 0xe8, 0xbd, 0x6f, 0x35,
-	0x58, 0x7d, 0xb6, 0xff, 0x82, 0x9c, 0xc3, 0xe6, 0x82, 0x31, 0xa4, 0x57, 0x5e, 0xa0, 0xcc, 0x3d,
-	0xaf, 0xda, 0x2c, 0xba, 0xfd, 0xe5, 0xfb, 0x8f, 0xaf, 0x2b, 0x5b, 0x74, 0x43, 0x7d, 0x63, 0x8d,
-	0x71, 0x62, 0x50, 0x24, 0x8b, 0x43, 0xa3, 0xb0, 0x8b, 0xdc, 0x2f, 0x2f, 0x75, 0xd1, 0x63, 0xaf,
-	0xbb, 0x14, 0xa7, 0x7d, 0xa7, 0x2d, 0x6c, 0xde, 0x24, 0x0d, 0xd5, 0x1c, 0x8d, 0x25, 0x13, 0xa8,
-	0x1b, 0x63, 0xc9, 0x4e, 0x79, 0x99, 0x45, 0xdf, 0xbd, 0x0a, 0x03, 0xa9, 0x87, 0xf5, 0xdb, 0x84,
-	0xa8, 0xfa, 0x9f, 0x94, 0x49, 0x8f, 0xb1, 0x4b, 0xd0, 0xfb, 0x4c, 0x4e, 0x00, 0x66, 0xd9, 0x20,
-	0xdd, 0xaa, 0x89, 0x5e, 0xb7, 0xdd, 0x16, 0xb6, 0x6b, 0xd1, 0x99, 0x9c, 0x81, 0x7e, 0x17, 0x23,
-	0x80, 0x59, 0x84, 0xae, 0xea, 0x75, 0x29, 0x64, 0xde, 0xcd, 0x4b, 0x1f, 0x86, 0x43, 0xf5, 0xa7,
-	0x64, 0x65, 0xf5, 0xca, 0x64, 0x15, 0x59, 0xb1, 0xdf, 0xb0, 0xca, 0xac, 0x2c, 0x26, 0xd5, 0xab,
-	0x0e, 0xe6, 0x62, 0x56, 0x4c, 0x48, 0xc5, 0xc0, 0xc6, 0xf5, 0x78, 0x1d, 0xaf, 0xf9, 0xe0, 0x4f,
-	0x00, 0x00, 0x00, 0xff, 0xff, 0xb1, 0x02, 0x18, 0x90, 0xc0, 0x07, 0x00, 0x00,
+	// 858 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x56, 0x4d, 0x6f, 0xd3, 0x48,
+	0x18, 0x96, 0xfb, 0x95, 0xf5, 0x9b, 0x7e, 0x6c, 0x66, 0xb3, 0x69, 0xe4, 0xdd, 0x6e, 0xbb, 0xb3,
+	0xd5, 0xa6, 0xcd, 0x76, 0xed, 0xaa, 0x3d, 0xac, 0x94, 0x15, 0x88, 0xaa, 0x54, 0x55, 0x05, 0x08,
+	0x64, 0xe0, 0xc2, 0x25, 0x72, 0x93, 0xa1, 0x72, 0x9b, 0xd8, 0xc6, 0xe3, 0x94, 0x46, 0x08, 0x09,
+	0xc1, 0x4f, 0xa0, 0xfc, 0x32, 0xfe, 0x42, 0xaf, 0x70, 0x45, 0xdc, 0xd0, 0x7c, 0xd8, 0x8e, 0x5d,
+	0x3b, 0x0e, 0x07, 0x2e, 0x3d, 0x35, 0x33, 0xf3, 0x7e, 0x3c, 0xcf, 0x3b, 0xf3, 0x3c, 0x35, 0xfc,
+	0x71, 0x4a, 0x5d, 0xa7, 0x3f, 0xe8, 0x05, 0xb6, 0xd7, 0x23, 0x17, 0x86, 0x6d, 0xf5, 0x8d, 0xf3,
+	0x6d, 0xf6, 0x47, 0xf7, 0x7c, 0x37, 0x70, 0x51, 0x35, 0x71, 0xae, 0xb3, 0x83, 0xf3, 0x6d, 0xed,
+	0xf7, 0x13, 0xd7, 0x3d, 0xe9, 0x11, 0xc3, 0xf2, 0x6c, 0xc3, 0x72, 0x1c, 0x37, 0xb0, 0x02, 0xdb,
+	0x75, 0xa8, 0xc8, 0xd1, 0x56, 0xe5, 0x29, 0x5f, 0x1d, 0x0f, 0x9e, 0x1b, 0x81, 0xdd, 0x27, 0x34,
+	0xb0, 0xfa, 0x9e, 0x0c, 0xf8, 0x2d, 0x1d, 0x40, 0xfa, 0x5e, 0x30, 0x14, 0x87, 0xf8, 0xab, 0x02,
+	0xa5, 0xbd, 0x4e, 0xc7, 0x1d, 0x38, 0x01, 0x42, 0x30, 0xe3, 0x58, 0x7d, 0x52, 0x57, 0xd6, 0x94,
+	0x0d, 0xd5, 0xe4, 0xbf, 0xd1, 0xff, 0x50, 0xee, 0xf8, 0xc4, 0x0a, 0x48, 0x9b, 0x95, 0xad, 0x4f,
+	0xad, 0x29, 0x1b, 0xe5, 0x1d, 0x4d, 0x17, 0x25, 0xf5, 0xb0, 0xa4, 0xfe, 0x24, 0xec, 0x69, 0x82,
+	0x08, 0x67, 0x1b, 0x2c, 0x79, 0xe0, 0x75, 0xa3, 0xe4, 0xe9, 0xe2, 0x64, 0x11, 0x1e, 0x26, 0x77,
+	0x49, 0x8f, 0x84, 0xc9, 0x33, 0xc5, 0xc9, 0x22, 0x9c, 0x27, 0xff, 0x05, 0x0b, 0xbe, 0xeb, 0x06,
+	0x6d, 0xcf, 0xa2, 0xf4, 0xa5, 0xeb, 0x77, 0xeb, 0xb3, 0x9c, 0xd3, 0x3c, 0xdb, 0x7c, 0x24, 0xf7,
+	0xf0, 0x27, 0x05, 0x66, 0x9e, 0x52, 0xe2, 0xdf, 0x24, 0xe2, 0x1a, 0xfc, 0x94, 0xe2, 0x1c, 0xad,
+	0xf1, 0x67, 0x05, 0xd4, 0xbd, 0x4e, 0x87, 0x50, 0x7a, 0x8f, 0x0c, 0x6f, 0x12, 0xe9, 0x1a, 0xcc,
+	0x51, 0xd2, 0xf1, 0x49, 0x20, 0x29, 0xcb, 0x15, 0xfe, 0xa2, 0x40, 0xe9, 0x31, 0xa1, 0xd4, 0x76,
+	0x9d, 0x1f, 0x42, 0x97, 0x5c, 0x78, 0xb6, 0x3f, 0x39, 0x5d, 0x11, 0xce, 0x93, 0xeb, 0x50, 0xb2,
+	0x84, 0xea, 0x38, 0x55, 0xd5, 0x0c, 0x97, 0x0c, 0xe7, 0x80, 0x12, 0x5f, 0x32, 0xe1, 0xbf, 0x13,
+	0x97, 0x3a, 0x97, 0xbc, 0x54, 0x54, 0x85, 0xd9, 0xc0, 0x3d, 0x23, 0x4e, 0xbd, 0xc4, 0x0f, 0xc4,
+	0x02, 0x3f, 0x84, 0xea, 0x3e, 0x87, 0x2a, 0xb5, 0x6d, 0x92, 0x17, 0x03, 0x42, 0x03, 0xf4, 0x5f,
+	0xdc, 0x57, 0xe1, 0x80, 0x57, 0xf4, 0x2c, 0xcb, 0xd1, 0xc3, 0xb4, 0x30, 0x1a, 0x23, 0xf8, 0xf9,
+	0xbe, 0x4d, 0x03, 0x26, 0x17, 0x2a, 0x8b, 0xe1, 0x03, 0xa8, 0x8c, 0xec, 0x51, 0xcf, 0x75, 0x28,
+	0x41, 0xdb, 0x30, 0xcb, 0x30, 0xd3, 0xba, 0xb2, 0x36, 0xcd, 0x07, 0x92, 0x59, 0x9f, 0xe5, 0x98,
+	0x22, 0x10, 0xaf, 0xc3, 0xe2, 0x21, 0xe1, 0x55, 0x42, 0x94, 0x19, 0x77, 0x85, 0xf7, 0xa1, 0x22,
+	0x18, 0x8d, 0x06, 0xea, 0x72, 0x58, 0x8a, 0x1c, 0x7e, 0x7e, 0x2f, 0x1e, 0x87, 0x1b, 0x50, 0xb9,
+	0xcb, 0x9f, 0x4d, 0x51, 0x37, 0x03, 0x7e, 0x65, 0xd4, 0x22, 0xb5, 0x84, 0x9c, 0xd9, 0x53, 0xf3,
+	0x2c, 0x9f, 0xc8, 0xf9, 0xa9, 0xa6, 0x5c, 0xe1, 0x67, 0x50, 0x4b, 0x27, 0xc8, 0x81, 0xdc, 0x81,
+	0xb2, 0xc5, 0x77, 0xdb, 0x67, 0x64, 0x18, 0x8e, 0x65, 0x35, 0x77, 0xec, 0x22, 0xdd, 0x04, 0x2b,
+	0xaa, 0x84, 0x37, 0xe1, 0x97, 0x43, 0x12, 0x97, 0x1e, 0x87, 0xfb, 0x52, 0x81, 0x5a, 0x74, 0xf1,
+	0xc9, 0xf0, 0x1c, 0xe4, 0x08, 0xc3, 0x42, 0x8c, 0xaf, 0x6d, 0x77, 0xb9, 0x0c, 0x54, 0xb3, 0x1c,
+	0x01, 0x38, 0xea, 0xa2, 0xdb, 0x00, 0x71, 0x8c, 0x7c, 0xea, 0x85, 0x14, 0xd4, 0xa8, 0x02, 0xde,
+	0x82, 0x9a, 0x98, 0xfb, 0x44, 0x24, 0xa2, 0xc7, 0x2b, 0xb5, 0x3b, 0xf2, 0x78, 0xa9, 0xd8, 0x19,
+	0xff, 0x78, 0xc3, 0xb4, 0x30, 0x7a, 0xe7, 0x4a, 0x85, 0xe9, 0xa3, 0xbd, 0x07, 0x68, 0x08, 0x0b,
+	0x09, 0x55, 0xa0, 0x66, 0x76, 0x81, 0x2c, 0xe9, 0x68, 0xe3, 0x95, 0x82, 0x57, 0xde, 0x7e, 0xbc,
+	0x7a, 0x3f, 0xb5, 0x8c, 0xe7, 0xd9, 0x7f, 0x74, 0xa9, 0x1a, 0xda, 0x8a, 0x64, 0xed, 0x82, 0x1a,
+	0x69, 0x05, 0xfd, 0x9d, 0x5d, 0x2a, 0x2d, 0x30, 0xad, 0x51, 0x18, 0x27, 0xde, 0x18, 0xae, 0xf0,
+	0xe6, 0x65, 0xa4, 0xb2, 0xe6, 0x5c, 0x55, 0xe8, 0x04, 0x4a, 0x52, 0x55, 0x68, 0x3d, 0xbb, 0x4c,
+	0x52, 0x74, 0xda, 0x18, 0xf5, 0x60, 0x8d, 0xd7, 0xaf, 0x22, 0xc4, 0xea, 0xbf, 0x62, 0x97, 0x74,
+	0x8b, 0x77, 0x31, 0x9a, 0xaf, 0xd1, 0x29, 0x40, 0x2c, 0x4c, 0xd4, 0x18, 0x37, 0xd1, 0x49, 0xdb,
+	0x2d, 0xf3, 0x76, 0x15, 0x1c, 0xd3, 0x69, 0x09, 0x23, 0xb4, 0x01, 0x62, 0xfd, 0xe6, 0xf5, 0xba,
+	0xa6, 0x70, 0xad, 0x76, 0xcd, 0x95, 0x0f, 0xd8, 0x27, 0x50, 0x48, 0xab, 0x99, 0x45, 0xeb, 0x52,
+	0x81, 0xc5, 0xa4, 0xa2, 0xd1, 0x3f, 0xf9, 0xd7, 0x71, 0xcd, 0x28, 0xb4, 0xad, 0xc9, 0x82, 0xe5,
+	0x05, 0x36, 0x38, 0x92, 0x3f, 0xd1, 0x2a, 0x47, 0x22, 0x94, 0x19, 0x61, 0x31, 0x62, 0x2f, 0x40,
+	0xef, 0x14, 0x98, 0x1f, 0x35, 0x03, 0xb4, 0x99, 0x7b, 0xb9, 0x69, 0xad, 0x69, 0x45, 0x8a, 0x4d,
+	0xa1, 0x18, 0x9d, 0xc7, 0x08, 0x04, 0x36, 0x9c, 0x0f, 0x0a, 0x2c, 0xa5, 0x6c, 0x06, 0x6d, 0x15,
+	0x68, 0xe9, 0x3b, 0xb1, 0xec, 0x72, 0x2c, 0xff, 0xe2, 0xa2, 0x89, 0xb4, 0x46, 0x9c, 0x09, 0xbd,
+	0x51, 0x60, 0x29, 0x65, 0x34, 0x79, 0xb8, 0xb2, 0xfd, 0x28, 0xf7, 0xa9, 0xc8, 0xd1, 0x34, 0x0b,
+	0x47, 0x13, 0x79, 0x4c, 0xf8, 0xe1, 0x31, 0xd6, 0x63, 0x92, 0x0e, 0xa7, 0x8d, 0x37, 0xb4, 0xa4,
+	0xc7, 0x48, 0x73, 0xa3, 0xad, 0xd0, 0xe6, 0x8e, 0xe7, 0x38, 0xe6, 0xdd, 0x6f, 0x01, 0x00, 0x00,
+	0xff, 0xff, 0x26, 0x6f, 0x17, 0x27, 0x66, 0x0c, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -603,6 +907,10 @@ type IAMClient interface {
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*User, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	ListAccessKeys(ctx context.Context, in *ListAccessKeysRequest, opts ...grpc.CallOption) (*ListAccessKeysResponse, error)
+	GetAccessKey(ctx context.Context, in *GetAccessKeyRequest, opts ...grpc.CallOption) (*AccessKey, error)
+	CreateAccessKey(ctx context.Context, in *CreateAccessKeyRequest, opts ...grpc.CallOption) (*AccessKey, error)
+	DeleteAccessKey(ctx context.Context, in *DeleteAccessKeyRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*Session, error)
 }
 
@@ -659,6 +967,42 @@ func (c *iAMClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts 
 	return out, nil
 }
 
+func (c *iAMClient) ListAccessKeys(ctx context.Context, in *ListAccessKeysRequest, opts ...grpc.CallOption) (*ListAccessKeysResponse, error) {
+	out := new(ListAccessKeysResponse)
+	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/ListAccessKeys", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *iAMClient) GetAccessKey(ctx context.Context, in *GetAccessKeyRequest, opts ...grpc.CallOption) (*AccessKey, error) {
+	out := new(AccessKey)
+	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/GetAccessKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *iAMClient) CreateAccessKey(ctx context.Context, in *CreateAccessKeyRequest, opts ...grpc.CallOption) (*AccessKey, error) {
+	out := new(AccessKey)
+	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/CreateAccessKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *iAMClient) DeleteAccessKey(ctx context.Context, in *DeleteAccessKeyRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/DeleteAccessKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *iAMClient) CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*Session, error) {
 	out := new(Session)
 	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/CreateSession", in, out, opts...)
@@ -675,6 +1019,10 @@ type IAMServer interface {
 	GetUser(context.Context, *GetUserRequest) (*User, error)
 	CreateUser(context.Context, *CreateUserRequest) (*User, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*empty.Empty, error)
+	ListAccessKeys(context.Context, *ListAccessKeysRequest) (*ListAccessKeysResponse, error)
+	GetAccessKey(context.Context, *GetAccessKeyRequest) (*AccessKey, error)
+	CreateAccessKey(context.Context, *CreateAccessKeyRequest) (*AccessKey, error)
+	DeleteAccessKey(context.Context, *DeleteAccessKeyRequest) (*empty.Empty, error)
 	CreateSession(context.Context, *CreateSessionRequest) (*Session, error)
 }
 
@@ -696,6 +1044,18 @@ func (*UnimplementedIAMServer) CreateUser(ctx context.Context, req *CreateUserRe
 }
 func (*UnimplementedIAMServer) DeleteUser(ctx context.Context, req *DeleteUserRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
+}
+func (*UnimplementedIAMServer) ListAccessKeys(ctx context.Context, req *ListAccessKeysRequest) (*ListAccessKeysResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAccessKeys not implemented")
+}
+func (*UnimplementedIAMServer) GetAccessKey(ctx context.Context, req *GetAccessKeyRequest) (*AccessKey, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccessKey not implemented")
+}
+func (*UnimplementedIAMServer) CreateAccessKey(ctx context.Context, req *CreateAccessKeyRequest) (*AccessKey, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAccessKey not implemented")
+}
+func (*UnimplementedIAMServer) DeleteAccessKey(ctx context.Context, req *DeleteAccessKeyRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAccessKey not implemented")
 }
 func (*UnimplementedIAMServer) CreateSession(ctx context.Context, req *CreateSessionRequest) (*Session, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSession not implemented")
@@ -795,6 +1155,78 @@ func _IAM_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _IAM_ListAccessKeys_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAccessKeysRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IAMServer).ListAccessKeys(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jsonmultiplex.iam.v0.IAM/ListAccessKeys",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IAMServer).ListAccessKeys(ctx, req.(*ListAccessKeysRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IAM_GetAccessKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAccessKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IAMServer).GetAccessKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jsonmultiplex.iam.v0.IAM/GetAccessKey",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IAMServer).GetAccessKey(ctx, req.(*GetAccessKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IAM_CreateAccessKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAccessKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IAMServer).CreateAccessKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jsonmultiplex.iam.v0.IAM/CreateAccessKey",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IAMServer).CreateAccessKey(ctx, req.(*CreateAccessKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IAM_DeleteAccessKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAccessKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IAMServer).DeleteAccessKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jsonmultiplex.iam.v0.IAM/DeleteAccessKey",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IAMServer).DeleteAccessKey(ctx, req.(*DeleteAccessKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _IAM_CreateSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateSessionRequest)
 	if err := dec(in); err != nil {
@@ -836,6 +1268,22 @@ var _IAM_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUser",
 			Handler:    _IAM_DeleteUser_Handler,
+		},
+		{
+			MethodName: "ListAccessKeys",
+			Handler:    _IAM_ListAccessKeys_Handler,
+		},
+		{
+			MethodName: "GetAccessKey",
+			Handler:    _IAM_GetAccessKey_Handler,
+		},
+		{
+			MethodName: "CreateAccessKey",
+			Handler:    _IAM_CreateAccessKey_Handler,
+		},
+		{
+			MethodName: "DeleteAccessKey",
+			Handler:    _IAM_DeleteAccessKey_Handler,
 		},
 		{
 			MethodName: "CreateSession",

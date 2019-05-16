@@ -283,6 +283,167 @@ func (s *server) DeleteUser(ctx context.Context, in *pb.DeleteUserRequest) (*emp
 	return &empty.Empty{}, nil
 }
 
+func (s *server) ListAccessKeys(ctx context.Context, in *pb.ListAccessKeysRequest) (*pb.ListAccessKeysResponse, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	userID := strings.Split(in.Parent, "/")[1]
+	accessKeysList, err := s.Service.ListAccessKeys(ctx, service.ListAccessKeysRequest{
+		UserID: userID,
+		Token:  token,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	accessKeys := make([]*pb.AccessKey, len(accessKeysList.AccessKeys))
+	for i, accessKey := range accessKeysList.AccessKeys {
+		createTime, err := ptypes.TimestampProto(accessKey.CreateTime)
+		if err != nil {
+			return nil, err
+		}
+
+		updateTime, err := ptypes.TimestampProto(accessKey.UpdateTime)
+		if err != nil {
+			return nil, err
+		}
+
+		var deleteTime *timestamp.Timestamp
+		if accessKey.DeleteTime != nil {
+			var err error
+			deleteTime, err = ptypes.TimestampProto(*accessKey.DeleteTime)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		accessKeys[i] = &pb.AccessKey{
+			Name:       fmt.Sprintf("users/%s/accessKeys/%s", accessKey.UserID, accessKey.ID),
+			CreateTime: createTime,
+			UpdateTime: updateTime,
+			DeleteTime: deleteTime,
+		}
+	}
+
+	return &pb.ListAccessKeysResponse{AccessKeys: accessKeys}, nil
+}
+
+func (s *server) GetAccessKey(ctx context.Context, in *pb.GetAccessKeyRequest) (*pb.AccessKey, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	userID := strings.Split(in.Name, "/")[1]
+	accessKeyID := strings.Split(in.Name, "/")[3]
+	accessKey, err := s.Service.GetAccessKey(ctx, service.GetAccessKeyRequest{
+		UserID: userID,
+		ID:     accessKeyID,
+		Token:  token,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	createTime, err := ptypes.TimestampProto(accessKey.CreateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	updateTime, err := ptypes.TimestampProto(accessKey.UpdateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	var deleteTime *timestamp.Timestamp
+	if accessKey.DeleteTime != nil {
+		var err error
+		deleteTime, err = ptypes.TimestampProto(*accessKey.DeleteTime)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &pb.AccessKey{
+		Name:       fmt.Sprintf("users/%s/accessKeys/%s", accessKey.UserID, accessKey.ID),
+		CreateTime: createTime,
+		UpdateTime: updateTime,
+		DeleteTime: deleteTime,
+	}, nil
+}
+
+func (s *server) CreateAccessKey(ctx context.Context, in *pb.CreateAccessKeyRequest) (*pb.AccessKey, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	userID := strings.Split(in.Parent, "/")[1]
+	accessKey, err := s.Service.CreateAccessKey(ctx, service.CreateAccessKeyRequest{
+		AccessKey: models.AccessKey{
+			UserID: userID,
+			ID:     in.AccessKeyId,
+		},
+		Token: token,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	createTime, err := ptypes.TimestampProto(accessKey.CreateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	updateTime, err := ptypes.TimestampProto(accessKey.UpdateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	var deleteTime *timestamp.Timestamp
+	if accessKey.DeleteTime != nil {
+		var err error
+		deleteTime, err = ptypes.TimestampProto(*accessKey.DeleteTime)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &pb.AccessKey{
+		Name:       fmt.Sprintf("users/%s/accessKeys/%s", accessKey.UserID, accessKey.ID),
+		CreateTime: createTime,
+		UpdateTime: updateTime,
+		DeleteTime: deleteTime,
+		Secret:     accessKey.Secret,
+	}, nil
+}
+
+func (s *server) DeleteAccessKey(ctx context.Context, in *pb.DeleteAccessKeyRequest) (*empty.Empty, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	userID := strings.Split(in.Name, "/")[1]
+	accessKeyID := strings.Split(in.Name, "/")[3]
+	err = s.Service.DeleteAccessKey(ctx, service.DeleteAccessKeyRequest{
+		UserID: userID,
+		ID:     accessKeyID,
+		Token:  token,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
 func (s *server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest) (*pb.Session, error) {
 	accountID := strings.Split(in.Session.Account, "/")[1]
 	userID := strings.Split(in.Session.User, "/")[1]
