@@ -131,6 +131,165 @@ func (s *server) CreateAccount(ctx context.Context, in *pb.CreateAccountRequest)
 	}, nil
 }
 
+func (s *server) ListIdentityProviders(ctx context.Context, in *pb.ListIdentityProvidersRequest) (*pb.ListIdentityProvidersResponse, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	identityProvidersList, err := s.Service.ListIdentityProviders(ctx, service.ListIdentityProvidersRequest{Token: token})
+	if err != nil {
+		return nil, err
+	}
+
+	identityProviders := make([]*pb.IdentityProvider, len(identityProvidersList.IdentityProviders))
+	for i, identityProvider := range identityProvidersList.IdentityProviders {
+		createTime, err := ptypes.TimestampProto(identityProvider.CreateTime)
+		if err != nil {
+			return nil, err
+		}
+
+		updateTime, err := ptypes.TimestampProto(identityProvider.UpdateTime)
+		if err != nil {
+			return nil, err
+		}
+
+		var deleteTime *timestamp.Timestamp
+		if identityProvider.DeleteTime != nil {
+			var err error
+			deleteTime, err = ptypes.TimestampProto(*identityProvider.DeleteTime)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		identityProviders[i] = &pb.IdentityProvider{
+			Name:            fmt.Sprintf("identityProviders/%s", identityProvider.ID),
+			CreateTime:      createTime,
+			UpdateTime:      updateTime,
+			DeleteTime:      deleteTime,
+			SamlMetadataUrl: identityProvider.SAMLMetadataURL,
+			UserIdAttribute: identityProvider.UserIDAttribute,
+		}
+	}
+
+	return &pb.ListIdentityProvidersResponse{IdentityProviders: identityProviders}, nil
+}
+
+func (s *server) GetIdentityProvider(ctx context.Context, in *pb.GetIdentityProviderRequest) (*pb.IdentityProvider, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	identityProviderID := strings.Split(in.Name, "/")[1]
+	identityProvider, err := s.Service.GetIdentityProvider(ctx, service.GetIdentityProviderRequest{
+		ID:    identityProviderID,
+		Token: token,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	createTime, err := ptypes.TimestampProto(identityProvider.CreateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	updateTime, err := ptypes.TimestampProto(identityProvider.UpdateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	var deleteTime *timestamp.Timestamp
+	if identityProvider.DeleteTime != nil {
+		var err error
+		deleteTime, err = ptypes.TimestampProto(*identityProvider.DeleteTime)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &pb.IdentityProvider{
+		Name:            fmt.Sprintf("identityProviders/%s", identityProvider.ID),
+		CreateTime:      createTime,
+		UpdateTime:      updateTime,
+		DeleteTime:      deleteTime,
+		SamlMetadataUrl: identityProvider.SAMLMetadataURL,
+		UserIdAttribute: identityProvider.UserIDAttribute,
+	}, nil
+}
+
+func (s *server) CreateIdentityProvider(ctx context.Context, in *pb.CreateIdentityProviderRequest) (*pb.IdentityProvider, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	identityProviderID := strings.Split(in.IdentityProvider.Name, "/")[1]
+	identityProvider, err := s.Service.CreateIdentityProvider(ctx, service.CreateIdentityProviderRequest{
+		IdentityProvider: models.IdentityProvider{
+			ID:              identityProviderID,
+			SAMLMetadataURL: in.IdentityProvider.SamlMetadataUrl,
+			UserIDAttribute: in.IdentityProvider.UserIdAttribute,
+		},
+		Token: token,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	createTime, err := ptypes.TimestampProto(identityProvider.CreateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	updateTime, err := ptypes.TimestampProto(identityProvider.UpdateTime)
+	if err != nil {
+		return nil, err
+	}
+
+	var deleteTime *timestamp.Timestamp
+	if identityProvider.DeleteTime != nil {
+		var err error
+		deleteTime, err = ptypes.TimestampProto(*identityProvider.DeleteTime)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &pb.IdentityProvider{
+		Name:            fmt.Sprintf("identityProviders/%s", identityProvider.ID),
+		CreateTime:      createTime,
+		UpdateTime:      updateTime,
+		DeleteTime:      deleteTime,
+		SamlMetadataUrl: identityProvider.SAMLMetadataURL,
+		UserIdAttribute: identityProvider.UserIDAttribute,
+	}, nil
+}
+
+func (s *server) DeleteIdentityProvider(ctx context.Context, in *pb.DeleteIdentityProviderRequest) (*empty.Empty, error) {
+	token, err := s.getToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	identityProviderID := strings.Split(in.Name, "/")[1]
+
+	err = s.Service.DeleteIdentityProvider(ctx, service.DeleteIdentityProviderRequest{
+		Token: token,
+		ID:    identityProviderID,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
 func (s *server) ListUsers(ctx context.Context, in *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
 	token, err := s.getToken(ctx)
 	if err != nil {

@@ -13,6 +13,31 @@ service IAM {
     };
   }
 
+  rpc ListIdentityProviders(ListIdentityProvidersRequest) returns (ListIdentityProvidersResponse) {
+    option (google.api.http) = {
+      get: "/v0/identityProviders"
+    };
+  }
+
+  rpc GetIdentityProvider(GetIdentityProviderRequest) returns (IdentityProvider) {
+    option (google.api.http) = {
+      get: "/v0/{name=identityProviders/*}"
+    };
+  }
+
+  rpc CreateIdentityProvider(CreateIdentityProviderRequest) returns (IdentityProvider) {
+    option (google.api.http) = {
+      post: "/v0/IdentityProviders"
+      body: "identityProvider"
+    };
+  }
+
+  rpc DeleteIdentityProvider(DeleteIdentityProviderRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v0/{name=identityProviders/*}"
+    };
+  }
+
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
     option (google.api.http) = {
       get: "/v0/users"
@@ -103,6 +128,16 @@ message AccessKey {
   string secret = 5;
 }
 
+message IdentityProvider {
+  string name = 1;
+  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp update_time = 3;
+  google.protobuf.Timestamp delete_time = 4;
+
+  string saml_metadata_url = 5;
+  string user_id_attribute = 6;
+}
+
 message Session {
   string name = 1;
   google.protobuf.Timestamp create_time = 2;
@@ -120,6 +155,24 @@ message Session {
 
 message CreateAccountRequest {
   Account account = 1;
+}
+
+message ListIdentityProvidersRequest {}
+
+message ListIdentityProvidersResponse {
+  repeated IdentityProvider identity_providers = 1;
+}
+
+message GetIdentityProviderRequest {
+  string name = 1;
+}
+
+message CreateIdentityProviderRequest {
+  IdentityProvider identity_provider = 1;
+}
+
+message DeleteIdentityProviderRequest {
+  string name = 1;
 }
 
 message ListUsersRequest {}

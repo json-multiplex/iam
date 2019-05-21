@@ -8,6 +8,10 @@ import (
 
 type Service interface {
 	CreateAccount(context.Context, CreateAccountRequest) (models.Account, error)
+	ListIdentityProviders(context.Context, ListIdentityProvidersRequest) (ListIdentityProvidersResponse, error)
+	GetIdentityProvider(context.Context, GetIdentityProviderRequest) (models.IdentityProvider, error)
+	CreateIdentityProvider(context.Context, CreateIdentityProviderRequest) (models.IdentityProvider, error)
+	DeleteIdentityProvider(context.Context, DeleteIdentityProviderRequest) error
 	ListUsers(context.Context, ListUsersRequest) (ListUsersResponse, error)
 	GetUser(context.Context, GetUserRequest) (models.User, error)
 	CreateUser(context.Context, CreateUserRequest) (models.User, error)
@@ -22,6 +26,29 @@ type Service interface {
 type CreateAccountRequest struct {
 	Account      models.Account
 	RootPassword string
+}
+
+type ListIdentityProvidersRequest struct {
+	Token string
+}
+
+type ListIdentityProvidersResponse struct {
+	IdentityProviders []models.IdentityProvider
+}
+
+type GetIdentityProviderRequest struct {
+	ID    string
+	Token string
+}
+
+type CreateIdentityProviderRequest struct {
+	IdentityProvider models.IdentityProvider
+	Token            string
+}
+
+type DeleteIdentityProviderRequest struct {
+	ID    string
+	Token string
 }
 
 type ListUsersRequest struct {

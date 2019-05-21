@@ -245,6 +245,85 @@ func (m *AccessKey) GetSecret() string {
 	return ""
 }
 
+type IdentityProvider struct {
+	Name                 string               `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	CreateTime           *timestamp.Timestamp `protobuf:"bytes,2,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	UpdateTime           *timestamp.Timestamp `protobuf:"bytes,3,opt,name=update_time,json=updateTime,proto3" json:"update_time,omitempty"`
+	DeleteTime           *timestamp.Timestamp `protobuf:"bytes,4,opt,name=delete_time,json=deleteTime,proto3" json:"delete_time,omitempty"`
+	SamlMetadataUrl      string               `protobuf:"bytes,5,opt,name=saml_metadata_url,json=samlMetadataUrl,proto3" json:"saml_metadata_url,omitempty"`
+	UserIdAttribute      string               `protobuf:"bytes,6,opt,name=user_id_attribute,json=userIdAttribute,proto3" json:"user_id_attribute,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
+}
+
+func (m *IdentityProvider) Reset()         { *m = IdentityProvider{} }
+func (m *IdentityProvider) String() string { return proto.CompactTextString(m) }
+func (*IdentityProvider) ProtoMessage()    {}
+func (*IdentityProvider) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{3}
+}
+
+func (m *IdentityProvider) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_IdentityProvider.Unmarshal(m, b)
+}
+func (m *IdentityProvider) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_IdentityProvider.Marshal(b, m, deterministic)
+}
+func (m *IdentityProvider) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_IdentityProvider.Merge(m, src)
+}
+func (m *IdentityProvider) XXX_Size() int {
+	return xxx_messageInfo_IdentityProvider.Size(m)
+}
+func (m *IdentityProvider) XXX_DiscardUnknown() {
+	xxx_messageInfo_IdentityProvider.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_IdentityProvider proto.InternalMessageInfo
+
+func (m *IdentityProvider) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *IdentityProvider) GetCreateTime() *timestamp.Timestamp {
+	if m != nil {
+		return m.CreateTime
+	}
+	return nil
+}
+
+func (m *IdentityProvider) GetUpdateTime() *timestamp.Timestamp {
+	if m != nil {
+		return m.UpdateTime
+	}
+	return nil
+}
+
+func (m *IdentityProvider) GetDeleteTime() *timestamp.Timestamp {
+	if m != nil {
+		return m.DeleteTime
+	}
+	return nil
+}
+
+func (m *IdentityProvider) GetSamlMetadataUrl() string {
+	if m != nil {
+		return m.SamlMetadataUrl
+	}
+	return ""
+}
+
+func (m *IdentityProvider) GetUserIdAttribute() string {
+	if m != nil {
+		return m.UserIdAttribute
+	}
+	return ""
+}
+
 type Session struct {
 	Name       string               `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	CreateTime *timestamp.Timestamp `protobuf:"bytes,2,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
@@ -265,7 +344,7 @@ func (m *Session) Reset()         { *m = Session{} }
 func (m *Session) String() string { return proto.CompactTextString(m) }
 func (*Session) ProtoMessage()    {}
 func (*Session) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{3}
+	return fileDescriptor_73b7e58ef322f61c, []int{4}
 }
 
 func (m *Session) XXX_Unmarshal(b []byte) error {
@@ -346,7 +425,7 @@ func (m *CreateAccountRequest) Reset()         { *m = CreateAccountRequest{} }
 func (m *CreateAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateAccountRequest) ProtoMessage()    {}
 func (*CreateAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{4}
+	return fileDescriptor_73b7e58ef322f61c, []int{5}
 }
 
 func (m *CreateAccountRequest) XXX_Unmarshal(b []byte) error {
@@ -374,6 +453,193 @@ func (m *CreateAccountRequest) GetAccount() *Account {
 	return nil
 }
 
+type ListIdentityProvidersRequest struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListIdentityProvidersRequest) Reset()         { *m = ListIdentityProvidersRequest{} }
+func (m *ListIdentityProvidersRequest) String() string { return proto.CompactTextString(m) }
+func (*ListIdentityProvidersRequest) ProtoMessage()    {}
+func (*ListIdentityProvidersRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{6}
+}
+
+func (m *ListIdentityProvidersRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListIdentityProvidersRequest.Unmarshal(m, b)
+}
+func (m *ListIdentityProvidersRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListIdentityProvidersRequest.Marshal(b, m, deterministic)
+}
+func (m *ListIdentityProvidersRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListIdentityProvidersRequest.Merge(m, src)
+}
+func (m *ListIdentityProvidersRequest) XXX_Size() int {
+	return xxx_messageInfo_ListIdentityProvidersRequest.Size(m)
+}
+func (m *ListIdentityProvidersRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListIdentityProvidersRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListIdentityProvidersRequest proto.InternalMessageInfo
+
+type ListIdentityProvidersResponse struct {
+	IdentityProviders    []*IdentityProvider `protobuf:"bytes,1,rep,name=identity_providers,json=identityProviders,proto3" json:"identity_providers,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
+	XXX_unrecognized     []byte              `json:"-"`
+	XXX_sizecache        int32               `json:"-"`
+}
+
+func (m *ListIdentityProvidersResponse) Reset()         { *m = ListIdentityProvidersResponse{} }
+func (m *ListIdentityProvidersResponse) String() string { return proto.CompactTextString(m) }
+func (*ListIdentityProvidersResponse) ProtoMessage()    {}
+func (*ListIdentityProvidersResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{7}
+}
+
+func (m *ListIdentityProvidersResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListIdentityProvidersResponse.Unmarshal(m, b)
+}
+func (m *ListIdentityProvidersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListIdentityProvidersResponse.Marshal(b, m, deterministic)
+}
+func (m *ListIdentityProvidersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListIdentityProvidersResponse.Merge(m, src)
+}
+func (m *ListIdentityProvidersResponse) XXX_Size() int {
+	return xxx_messageInfo_ListIdentityProvidersResponse.Size(m)
+}
+func (m *ListIdentityProvidersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListIdentityProvidersResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListIdentityProvidersResponse proto.InternalMessageInfo
+
+func (m *ListIdentityProvidersResponse) GetIdentityProviders() []*IdentityProvider {
+	if m != nil {
+		return m.IdentityProviders
+	}
+	return nil
+}
+
+type GetIdentityProviderRequest struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetIdentityProviderRequest) Reset()         { *m = GetIdentityProviderRequest{} }
+func (m *GetIdentityProviderRequest) String() string { return proto.CompactTextString(m) }
+func (*GetIdentityProviderRequest) ProtoMessage()    {}
+func (*GetIdentityProviderRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{8}
+}
+
+func (m *GetIdentityProviderRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetIdentityProviderRequest.Unmarshal(m, b)
+}
+func (m *GetIdentityProviderRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetIdentityProviderRequest.Marshal(b, m, deterministic)
+}
+func (m *GetIdentityProviderRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetIdentityProviderRequest.Merge(m, src)
+}
+func (m *GetIdentityProviderRequest) XXX_Size() int {
+	return xxx_messageInfo_GetIdentityProviderRequest.Size(m)
+}
+func (m *GetIdentityProviderRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetIdentityProviderRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetIdentityProviderRequest proto.InternalMessageInfo
+
+func (m *GetIdentityProviderRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type CreateIdentityProviderRequest struct {
+	IdentityProvider     *IdentityProvider `protobuf:"bytes,1,opt,name=identity_provider,json=identityProvider,proto3" json:"identity_provider,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
+}
+
+func (m *CreateIdentityProviderRequest) Reset()         { *m = CreateIdentityProviderRequest{} }
+func (m *CreateIdentityProviderRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateIdentityProviderRequest) ProtoMessage()    {}
+func (*CreateIdentityProviderRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{9}
+}
+
+func (m *CreateIdentityProviderRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateIdentityProviderRequest.Unmarshal(m, b)
+}
+func (m *CreateIdentityProviderRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateIdentityProviderRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateIdentityProviderRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateIdentityProviderRequest.Merge(m, src)
+}
+func (m *CreateIdentityProviderRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateIdentityProviderRequest.Size(m)
+}
+func (m *CreateIdentityProviderRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateIdentityProviderRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateIdentityProviderRequest proto.InternalMessageInfo
+
+func (m *CreateIdentityProviderRequest) GetIdentityProvider() *IdentityProvider {
+	if m != nil {
+		return m.IdentityProvider
+	}
+	return nil
+}
+
+type DeleteIdentityProviderRequest struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteIdentityProviderRequest) Reset()         { *m = DeleteIdentityProviderRequest{} }
+func (m *DeleteIdentityProviderRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteIdentityProviderRequest) ProtoMessage()    {}
+func (*DeleteIdentityProviderRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73b7e58ef322f61c, []int{10}
+}
+
+func (m *DeleteIdentityProviderRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteIdentityProviderRequest.Unmarshal(m, b)
+}
+func (m *DeleteIdentityProviderRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteIdentityProviderRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteIdentityProviderRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteIdentityProviderRequest.Merge(m, src)
+}
+func (m *DeleteIdentityProviderRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteIdentityProviderRequest.Size(m)
+}
+func (m *DeleteIdentityProviderRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteIdentityProviderRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteIdentityProviderRequest proto.InternalMessageInfo
+
+func (m *DeleteIdentityProviderRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
 type ListUsersRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -384,7 +650,7 @@ func (m *ListUsersRequest) Reset()         { *m = ListUsersRequest{} }
 func (m *ListUsersRequest) String() string { return proto.CompactTextString(m) }
 func (*ListUsersRequest) ProtoMessage()    {}
 func (*ListUsersRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{5}
+	return fileDescriptor_73b7e58ef322f61c, []int{11}
 }
 
 func (m *ListUsersRequest) XXX_Unmarshal(b []byte) error {
@@ -416,7 +682,7 @@ func (m *ListUsersResponse) Reset()         { *m = ListUsersResponse{} }
 func (m *ListUsersResponse) String() string { return proto.CompactTextString(m) }
 func (*ListUsersResponse) ProtoMessage()    {}
 func (*ListUsersResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{6}
+	return fileDescriptor_73b7e58ef322f61c, []int{12}
 }
 
 func (m *ListUsersResponse) XXX_Unmarshal(b []byte) error {
@@ -455,7 +721,7 @@ func (m *GetUserRequest) Reset()         { *m = GetUserRequest{} }
 func (m *GetUserRequest) String() string { return proto.CompactTextString(m) }
 func (*GetUserRequest) ProtoMessage()    {}
 func (*GetUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{7}
+	return fileDescriptor_73b7e58ef322f61c, []int{13}
 }
 
 func (m *GetUserRequest) XXX_Unmarshal(b []byte) error {
@@ -494,7 +760,7 @@ func (m *CreateUserRequest) Reset()         { *m = CreateUserRequest{} }
 func (m *CreateUserRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateUserRequest) ProtoMessage()    {}
 func (*CreateUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{8}
+	return fileDescriptor_73b7e58ef322f61c, []int{14}
 }
 
 func (m *CreateUserRequest) XXX_Unmarshal(b []byte) error {
@@ -533,7 +799,7 @@ func (m *DeleteUserRequest) Reset()         { *m = DeleteUserRequest{} }
 func (m *DeleteUserRequest) String() string { return proto.CompactTextString(m) }
 func (*DeleteUserRequest) ProtoMessage()    {}
 func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{9}
+	return fileDescriptor_73b7e58ef322f61c, []int{15}
 }
 
 func (m *DeleteUserRequest) XXX_Unmarshal(b []byte) error {
@@ -572,7 +838,7 @@ func (m *ListAccessKeysRequest) Reset()         { *m = ListAccessKeysRequest{} }
 func (m *ListAccessKeysRequest) String() string { return proto.CompactTextString(m) }
 func (*ListAccessKeysRequest) ProtoMessage()    {}
 func (*ListAccessKeysRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{10}
+	return fileDescriptor_73b7e58ef322f61c, []int{16}
 }
 
 func (m *ListAccessKeysRequest) XXX_Unmarshal(b []byte) error {
@@ -611,7 +877,7 @@ func (m *ListAccessKeysResponse) Reset()         { *m = ListAccessKeysResponse{}
 func (m *ListAccessKeysResponse) String() string { return proto.CompactTextString(m) }
 func (*ListAccessKeysResponse) ProtoMessage()    {}
 func (*ListAccessKeysResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{11}
+	return fileDescriptor_73b7e58ef322f61c, []int{17}
 }
 
 func (m *ListAccessKeysResponse) XXX_Unmarshal(b []byte) error {
@@ -650,7 +916,7 @@ func (m *GetAccessKeyRequest) Reset()         { *m = GetAccessKeyRequest{} }
 func (m *GetAccessKeyRequest) String() string { return proto.CompactTextString(m) }
 func (*GetAccessKeyRequest) ProtoMessage()    {}
 func (*GetAccessKeyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{12}
+	return fileDescriptor_73b7e58ef322f61c, []int{18}
 }
 
 func (m *GetAccessKeyRequest) XXX_Unmarshal(b []byte) error {
@@ -691,7 +957,7 @@ func (m *CreateAccessKeyRequest) Reset()         { *m = CreateAccessKeyRequest{}
 func (m *CreateAccessKeyRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateAccessKeyRequest) ProtoMessage()    {}
 func (*CreateAccessKeyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{13}
+	return fileDescriptor_73b7e58ef322f61c, []int{19}
 }
 
 func (m *CreateAccessKeyRequest) XXX_Unmarshal(b []byte) error {
@@ -744,7 +1010,7 @@ func (m *DeleteAccessKeyRequest) Reset()         { *m = DeleteAccessKeyRequest{}
 func (m *DeleteAccessKeyRequest) String() string { return proto.CompactTextString(m) }
 func (*DeleteAccessKeyRequest) ProtoMessage()    {}
 func (*DeleteAccessKeyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{14}
+	return fileDescriptor_73b7e58ef322f61c, []int{20}
 }
 
 func (m *DeleteAccessKeyRequest) XXX_Unmarshal(b []byte) error {
@@ -783,7 +1049,7 @@ func (m *CreateSessionRequest) Reset()         { *m = CreateSessionRequest{} }
 func (m *CreateSessionRequest) String() string { return proto.CompactTextString(m) }
 func (*CreateSessionRequest) ProtoMessage()    {}
 func (*CreateSessionRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73b7e58ef322f61c, []int{15}
+	return fileDescriptor_73b7e58ef322f61c, []int{21}
 }
 
 func (m *CreateSessionRequest) XXX_Unmarshal(b []byte) error {
@@ -815,8 +1081,14 @@ func init() {
 	proto.RegisterType((*Account)(nil), "jsonmultiplex.iam.v0.Account")
 	proto.RegisterType((*User)(nil), "jsonmultiplex.iam.v0.User")
 	proto.RegisterType((*AccessKey)(nil), "jsonmultiplex.iam.v0.AccessKey")
+	proto.RegisterType((*IdentityProvider)(nil), "jsonmultiplex.iam.v0.IdentityProvider")
 	proto.RegisterType((*Session)(nil), "jsonmultiplex.iam.v0.Session")
 	proto.RegisterType((*CreateAccountRequest)(nil), "jsonmultiplex.iam.v0.CreateAccountRequest")
+	proto.RegisterType((*ListIdentityProvidersRequest)(nil), "jsonmultiplex.iam.v0.ListIdentityProvidersRequest")
+	proto.RegisterType((*ListIdentityProvidersResponse)(nil), "jsonmultiplex.iam.v0.ListIdentityProvidersResponse")
+	proto.RegisterType((*GetIdentityProviderRequest)(nil), "jsonmultiplex.iam.v0.GetIdentityProviderRequest")
+	proto.RegisterType((*CreateIdentityProviderRequest)(nil), "jsonmultiplex.iam.v0.CreateIdentityProviderRequest")
+	proto.RegisterType((*DeleteIdentityProviderRequest)(nil), "jsonmultiplex.iam.v0.DeleteIdentityProviderRequest")
 	proto.RegisterType((*ListUsersRequest)(nil), "jsonmultiplex.iam.v0.ListUsersRequest")
 	proto.RegisterType((*ListUsersResponse)(nil), "jsonmultiplex.iam.v0.ListUsersResponse")
 	proto.RegisterType((*GetUserRequest)(nil), "jsonmultiplex.iam.v0.GetUserRequest")
@@ -833,61 +1105,76 @@ func init() {
 func init() { proto.RegisterFile("jsonmultiplex/iam/v0/iam.proto", fileDescriptor_73b7e58ef322f61c) }
 
 var fileDescriptor_73b7e58ef322f61c = []byte{
-	// 857 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x56, 0x4d, 0x4f, 0xe3, 0x46,
-	0x18, 0x96, 0x21, 0x90, 0xfa, 0x0d, 0x1f, 0xcd, 0x34, 0x0d, 0x91, 0x5b, 0x0a, 0x9d, 0xa2, 0x06,
-	0x52, 0x6a, 0x23, 0x38, 0x54, 0x4a, 0xd5, 0xaa, 0x88, 0x22, 0x84, 0xda, 0xaa, 0x95, 0xdb, 0x5e,
-	0x7a, 0x89, 0x4c, 0x32, 0x45, 0x86, 0xc4, 0x76, 0x3d, 0x0e, 0x25, 0xaa, 0x2a, 0xad, 0x76, 0x7f,
-	0xc2, 0xb2, 0xbf, 0x6c, 0xff, 0x02, 0xd7, 0xdd, 0xfb, 0xde, 0x56, 0xf3, 0x65, 0x3b, 0xc6, 0xb1,
-	0xb3, 0x87, 0xbd, 0x70, 0x82, 0x99, 0x79, 0x3f, 0x9e, 0xe7, 0x9d, 0x79, 0x9e, 0x18, 0x3e, 0xbb,
-	0xa2, 0xbe, 0x37, 0x1a, 0x0f, 0x23, 0x37, 0x18, 0x92, 0x5b, 0xcb, 0x75, 0x46, 0xd6, 0xcd, 0x01,
-	0xfb, 0x63, 0x06, 0xa1, 0x1f, 0xf9, 0xa8, 0x31, 0x75, 0x6e, 0xb2, 0x83, 0x9b, 0x03, 0xe3, 0xd3,
-	0x4b, 0xdf, 0xbf, 0x1c, 0x12, 0xcb, 0x09, 0x5c, 0xcb, 0xf1, 0x3c, 0x3f, 0x72, 0x22, 0xd7, 0xf7,
-	0xa8, 0xc8, 0x31, 0xb6, 0xe4, 0x29, 0x5f, 0x5d, 0x8c, 0xff, 0xb6, 0x22, 0x77, 0x44, 0x68, 0xe4,
-	0x8c, 0x02, 0x19, 0xf0, 0x49, 0x36, 0x80, 0x8c, 0x82, 0x68, 0x22, 0x0e, 0xf1, 0x1b, 0x0d, 0xaa,
-	0xc7, 0xfd, 0xbe, 0x3f, 0xf6, 0x22, 0x84, 0xa0, 0xe2, 0x39, 0x23, 0xd2, 0xd2, 0xb6, 0xb5, 0x5d,
-	0xdd, 0xe6, 0xff, 0xa3, 0x6f, 0xa1, 0xd6, 0x0f, 0x89, 0x13, 0x91, 0x1e, 0x2b, 0xdb, 0x5a, 0xd8,
-	0xd6, 0x76, 0x6b, 0x87, 0x86, 0x29, 0x4a, 0x9a, 0xaa, 0xa4, 0xf9, 0x87, 0xea, 0x69, 0x83, 0x08,
-	0x67, 0x1b, 0x2c, 0x79, 0x1c, 0x0c, 0xe2, 0xe4, 0xc5, 0xf2, 0x64, 0x11, 0xae, 0x92, 0x07, 0x64,
-	0x48, 0x54, 0x72, 0xa5, 0x3c, 0x59, 0x84, 0xf3, 0xe4, 0x2f, 0x60, 0x35, 0xf4, 0xfd, 0xa8, 0x17,
-	0x38, 0x94, 0xfe, 0xeb, 0x87, 0x83, 0xd6, 0x12, 0xe7, 0xb4, 0xc2, 0x36, 0x7f, 0x93, 0x7b, 0xf8,
-	0x95, 0x06, 0x95, 0x3f, 0x29, 0x09, 0x1f, 0x13, 0x71, 0x03, 0x3e, 0xc8, 0x70, 0x8e, 0xd7, 0xf8,
-	0xb5, 0x06, 0xfa, 0x71, 0xbf, 0x4f, 0x28, 0xfd, 0x89, 0x4c, 0x1e, 0x13, 0xe9, 0x26, 0x2c, 0x53,
-	0xd2, 0x0f, 0x49, 0x24, 0x29, 0xcb, 0x15, 0x7f, 0xdc, 0xbf, 0x13, 0x4a, 0x5d, 0xdf, 0x7b, 0x2f,
-	0x74, 0xc9, 0x6d, 0xe0, 0x86, 0xf3, 0xd3, 0x15, 0xe1, 0x3c, 0xb9, 0x05, 0x55, 0x47, 0xa8, 0x8e,
-	0x53, 0xd5, 0x6d, 0xb5, 0x64, 0x27, 0x74, 0x7c, 0x71, 0x45, 0xfa, 0x8a, 0x8c, 0x5a, 0xa6, 0x58,
-	0x2e, 0xa7, 0x59, 0xa2, 0x06, 0x2c, 0x45, 0xfe, 0x35, 0xf1, 0x5a, 0x55, 0xbe, 0x2d, 0x16, 0xf8,
-	0x57, 0x68, 0x9c, 0x70, 0xb0, 0x52, 0xdd, 0x36, 0xf9, 0x67, 0x4c, 0x68, 0x84, 0xbe, 0x49, 0x3a,
-	0x6b, 0x1c, 0xf2, 0xa6, 0x99, 0x67, 0x3a, 0xa6, 0x4a, 0x53, 0xd1, 0x18, 0xc1, 0x87, 0x3f, 0xbb,
-	0x34, 0x62, 0x82, 0xa1, 0xb2, 0x18, 0x3e, 0x85, 0x7a, 0x6a, 0x8f, 0x06, 0xbe, 0x47, 0x09, 0x3a,
-	0x80, 0xa5, 0x31, 0xdb, 0x68, 0x69, 0xdb, 0x8b, 0x7c, 0x24, 0xb9, 0xf5, 0x59, 0x8e, 0x2d, 0x02,
-	0xf1, 0x0e, 0xac, 0x9d, 0x11, 0x5e, 0x45, 0xa1, 0xcc, 0xb9, 0x2d, 0x7c, 0x02, 0x75, 0xc1, 0x28,
-	0x1d, 0x68, 0x42, 0x85, 0xd5, 0x90, 0x5c, 0x8a, 0x7a, 0xf1, 0x38, 0xdc, 0x86, 0xfa, 0x8f, 0xfc,
-	0xe1, 0x94, 0x75, 0xb3, 0xe0, 0x63, 0x46, 0x2d, 0xd6, 0x8b, 0xe2, 0xcc, 0xae, 0x21, 0x70, 0x42,
-	0x22, 0xe7, 0xa7, 0xdb, 0x72, 0x85, 0xff, 0x82, 0x66, 0x36, 0x41, 0x0e, 0xe4, 0x07, 0xa8, 0x39,
-	0x7c, 0xb7, 0x77, 0x4d, 0x26, 0x6a, 0x2c, 0x5b, 0x33, 0xc7, 0x2e, 0xd2, 0x6d, 0x70, 0xe2, 0x4a,
-	0x78, 0x0f, 0x3e, 0x3a, 0x23, 0x49, 0xe9, 0x22, 0xdc, 0x77, 0x1a, 0x34, 0xe3, 0x8b, 0x9f, 0x0e,
-	0x9f, 0x81, 0x1c, 0x61, 0x58, 0x4d, 0xf0, 0xf5, 0xdc, 0x01, 0x17, 0x82, 0x6e, 0xd7, 0x62, 0x00,
-	0xe7, 0x03, 0xf4, 0x3d, 0x40, 0x12, 0x23, 0x1f, 0x7b, 0x29, 0x05, 0x3d, 0xae, 0x80, 0xf7, 0xa1,
-	0x29, 0xe6, 0x3e, 0x17, 0x89, 0xf8, 0xf1, 0x4a, 0xf5, 0xa6, 0x1e, 0x2f, 0x15, 0x3b, 0xc5, 0x8f,
-	0x57, 0xa5, 0xa9, 0xe8, 0xc3, 0x7b, 0x1d, 0x16, 0xcf, 0x8f, 0x7f, 0x41, 0x13, 0x58, 0x9d, 0x52,
-	0x05, 0xea, 0xe4, 0x17, 0xc8, 0x93, 0x8e, 0x51, 0xac, 0x14, 0xbc, 0xf9, 0xf4, 0xe5, 0xfd, 0xf3,
-	0x85, 0x0d, 0xbc, 0xc2, 0x7e, 0xd3, 0xa5, 0x6a, 0x68, 0x37, 0x16, 0xb6, 0x0f, 0x7a, 0xac, 0x15,
-	0xf4, 0x65, 0x7e, 0xa9, 0xac, 0xc0, 0x8c, 0x76, 0x69, 0x9c, 0x78, 0x63, 0xb8, 0xce, 0x9b, 0xd7,
-	0x90, 0xce, 0x9a, 0x73, 0x55, 0xa1, 0x4b, 0xa8, 0x4a, 0x55, 0xa1, 0x9d, 0xfc, 0x32, 0xd3, 0xa2,
-	0x33, 0x0a, 0xd4, 0x83, 0x0d, 0x5e, 0xbf, 0x81, 0x10, 0xab, 0xff, 0x1f, 0xbb, 0xa4, 0xef, 0x78,
-	0x17, 0xab, 0xf3, 0x3f, 0xba, 0x02, 0x48, 0x84, 0x89, 0xda, 0x45, 0x13, 0x9d, 0xb7, 0xdd, 0x06,
-	0x6f, 0x57, 0xc7, 0x09, 0x9d, 0x2e, 0xd7, 0x2f, 0x72, 0x01, 0x12, 0xfd, 0xce, 0xea, 0xf5, 0x40,
-	0xe1, 0x46, 0xf3, 0x81, 0x2f, 0x9f, 0xb2, 0x8f, 0x20, 0x45, 0xab, 0x93, 0x47, 0xeb, 0x4e, 0x83,
-	0xb5, 0x69, 0x45, 0xa3, 0xaf, 0x66, 0x5f, 0xc7, 0x03, 0xa3, 0x30, 0xf6, 0xe7, 0x0b, 0x96, 0x17,
-	0xd8, 0xe6, 0x48, 0x3e, 0x47, 0x5b, 0x1c, 0x89, 0x50, 0x66, 0x8c, 0xc5, 0x4a, 0xbc, 0x00, 0x3d,
-	0xd3, 0x60, 0x25, 0x6d, 0x06, 0x68, 0x6f, 0xe6, 0xe5, 0x66, 0xb5, 0x66, 0x94, 0x29, 0x36, 0x83,
-	0x22, 0x3d, 0x8f, 0x14, 0x04, 0x36, 0x9c, 0x17, 0x1a, 0xac, 0x67, 0x6c, 0x06, 0xed, 0x97, 0x68,
-	0xe9, 0x1d, 0xb1, 0x1c, 0x71, 0x2c, 0x5f, 0xe3, 0xb2, 0x89, 0x74, 0x53, 0xce, 0x84, 0x9e, 0x68,
-	0xb0, 0x9e, 0x31, 0x9a, 0x59, 0xb8, 0xf2, 0xfd, 0x68, 0xe6, 0x53, 0x91, 0xa3, 0xe9, 0x94, 0x8e,
-	0x26, 0xf6, 0x18, 0xf5, 0xe9, 0x51, 0xe8, 0x31, 0xd3, 0x0e, 0x67, 0x14, 0x1b, 0xda, 0xb4, 0xc7,
-	0x48, 0x73, 0xa3, 0x5d, 0x65, 0x73, 0x17, 0xcb, 0x1c, 0xf3, 0xd1, 0xdb, 0x00, 0x00, 0x00, 0xff,
-	0xff, 0xb6, 0x1f, 0xc8, 0xd8, 0x68, 0x0c, 0x00, 0x00,
+	// 1103 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x57, 0x4b, 0x6f, 0x23, 0x45,
+	0x10, 0xd6, 0xe4, 0x89, 0xcb, 0x79, 0xb9, 0xc9, 0x7a, 0xad, 0x61, 0x9d, 0x84, 0x66, 0x95, 0x87,
+	0x09, 0xb6, 0x15, 0x1f, 0x90, 0x8c, 0x40, 0x44, 0xcb, 0x2a, 0x8a, 0x60, 0xc5, 0xca, 0x4b, 0x2e,
+	0x5c, 0xac, 0x89, 0xa7, 0x89, 0x26, 0x6b, 0xcf, 0x0c, 0xd3, 0xed, 0xb0, 0x16, 0x42, 0x42, 0x70,
+	0xe6, 0x44, 0x10, 0x47, 0x6e, 0xfc, 0x03, 0x7e, 0x09, 0x27, 0xee, 0x5c, 0xe1, 0xce, 0x0d, 0xf5,
+	0x6b, 0x3c, 0x9e, 0xa7, 0x23, 0xc4, 0x25, 0xa7, 0xa4, 0xbb, 0xab, 0xaa, 0xbf, 0xfa, 0xba, 0xfc,
+	0x7d, 0x36, 0xec, 0x5c, 0x53, 0xcf, 0x1d, 0x8d, 0x87, 0xcc, 0xf1, 0x87, 0xe4, 0x55, 0xcb, 0xb1,
+	0x46, 0xad, 0x9b, 0x36, 0xff, 0xd3, 0xf4, 0x03, 0x8f, 0x79, 0x68, 0x7b, 0xe6, 0xbc, 0xc9, 0x0f,
+	0x6e, 0xda, 0xe6, 0xa3, 0x2b, 0xcf, 0xbb, 0x1a, 0x92, 0x96, 0xe5, 0x3b, 0x2d, 0xcb, 0x75, 0x3d,
+	0x66, 0x31, 0xc7, 0x73, 0xa9, 0xcc, 0x31, 0x77, 0xd5, 0xa9, 0x58, 0x5d, 0x8e, 0xbf, 0x68, 0x31,
+	0x67, 0x44, 0x28, 0xb3, 0x46, 0xbe, 0x0a, 0x78, 0x23, 0x1e, 0x40, 0x46, 0x3e, 0x9b, 0xc8, 0x43,
+	0xfc, 0x8f, 0x01, 0xab, 0xa7, 0x83, 0x81, 0x37, 0x76, 0x19, 0x42, 0xb0, 0xe4, 0x5a, 0x23, 0x52,
+	0x33, 0xf6, 0x8c, 0xc3, 0x52, 0x4f, 0xfc, 0x8f, 0xde, 0x83, 0xf2, 0x20, 0x20, 0x16, 0x23, 0x7d,
+	0x5e, 0xb6, 0xb6, 0xb0, 0x67, 0x1c, 0x96, 0x4f, 0xcc, 0xa6, 0x2c, 0xd9, 0xd4, 0x25, 0x9b, 0x9f,
+	0xe9, 0x3b, 0x7b, 0x20, 0xc3, 0xf9, 0x06, 0x4f, 0x1e, 0xfb, 0x76, 0x98, 0xbc, 0x58, 0x9c, 0x2c,
+	0xc3, 0x75, 0xb2, 0x4d, 0x86, 0x44, 0x27, 0x2f, 0x15, 0x27, 0xcb, 0x70, 0x91, 0xfc, 0x16, 0xac,
+	0x07, 0x9e, 0xc7, 0xfa, 0xbe, 0x45, 0xe9, 0x57, 0x5e, 0x60, 0xd7, 0x96, 0x45, 0x4f, 0x6b, 0x7c,
+	0xf3, 0xb9, 0xda, 0xc3, 0x7f, 0x19, 0xb0, 0x74, 0x41, 0x49, 0x70, 0x9f, 0x1a, 0x37, 0xe1, 0xb5,
+	0x58, 0xcf, 0xe1, 0x1a, 0xff, 0x6d, 0x40, 0xe9, 0x74, 0x30, 0x20, 0x94, 0x7e, 0x4c, 0x26, 0xf7,
+	0xa9, 0xe9, 0x2a, 0xac, 0x50, 0x32, 0x08, 0x08, 0x53, 0x2d, 0xab, 0x15, 0xfe, 0x6d, 0x01, 0xb6,
+	0xce, 0x6d, 0xe2, 0x32, 0x87, 0x4d, 0x9e, 0x07, 0xde, 0x8d, 0x63, 0xdf, 0xaf, 0xc7, 0x6e, 0x40,
+	0x85, 0x5a, 0xa3, 0x61, 0x7f, 0x44, 0x98, 0x65, 0x5b, 0xcc, 0xea, 0x8f, 0x83, 0xa1, 0xa2, 0x60,
+	0x93, 0x1f, 0x3c, 0x53, 0xfb, 0x17, 0xc1, 0x90, 0xc7, 0x8e, 0x29, 0x09, 0xfa, 0x8e, 0xdd, 0xb7,
+	0x18, 0x0b, 0x9c, 0xcb, 0x31, 0x23, 0xb5, 0x15, 0x19, 0xcb, 0x0f, 0xce, 0xed, 0x53, 0xbd, 0x2d,
+	0x44, 0xe1, 0x05, 0xa1, 0xd4, 0xf1, 0xdc, 0xff, 0x85, 0x2e, 0xf2, 0xca, 0x77, 0x82, 0xf9, 0xe9,
+	0x92, 0xe1, 0x22, 0xb9, 0x06, 0xab, 0x96, 0x54, 0x2b, 0x41, 0x55, 0xa9, 0xa7, 0x97, 0xfc, 0x84,
+	0x8e, 0x2f, 0xaf, 0xc9, 0x40, 0x0f, 0x81, 0x5e, 0x46, 0xa6, 0x63, 0x25, 0x3a, 0x1d, 0x68, 0x1b,
+	0x96, 0x99, 0xf7, 0x92, 0xb8, 0xb5, 0x55, 0xb1, 0x2d, 0x17, 0xf8, 0x53, 0xd8, 0x7e, 0x22, 0xc0,
+	0x2a, 0x55, 0xec, 0x91, 0x2f, 0xc7, 0x84, 0x32, 0xf4, 0xee, 0xf4, 0x66, 0x43, 0x40, 0xae, 0x37,
+	0xd3, 0xc4, 0xba, 0xa9, 0xd3, 0x74, 0x34, 0xde, 0x81, 0x47, 0x9f, 0x38, 0x94, 0xc5, 0xe7, 0x90,
+	0xaa, 0xc2, 0xf8, 0x06, 0xea, 0x19, 0xe7, 0xd4, 0xf7, 0x5c, 0x4a, 0xd0, 0x05, 0x20, 0x47, 0x1d,
+	0xf6, 0x7d, 0x7d, 0x5a, 0x33, 0xf6, 0x16, 0x0f, 0xcb, 0x27, 0xfb, 0xe9, 0x20, 0xe2, 0xc5, 0x7a,
+	0x15, 0x27, 0x5e, 0x1e, 0xb7, 0xc1, 0x3c, 0x23, 0x89, 0x6b, 0x75, 0xbb, 0x29, 0xcf, 0x8e, 0x19,
+	0xd4, 0x25, 0x35, 0x59, 0x49, 0x2f, 0xa0, 0x92, 0x40, 0xaa, 0xd8, 0x9a, 0x17, 0xe8, 0x56, 0x1c,
+	0x28, 0xee, 0x40, 0xfd, 0x23, 0x31, 0xf2, 0x77, 0x81, 0x8a, 0x60, 0x8b, 0x93, 0xca, 0xd5, 0x3d,
+	0x24, 0xfa, 0x29, 0x54, 0x22, 0x7b, 0x8a, 0xdc, 0x36, 0x2c, 0xf3, 0xe9, 0xd7, 0x7c, 0x9a, 0xe9,
+	0x30, 0x79, 0x4e, 0x4f, 0x06, 0xe2, 0xc7, 0xb0, 0x71, 0x46, 0x44, 0x95, 0x3c, 0x00, 0x4f, 0xa0,
+	0x22, 0xb9, 0x8a, 0x06, 0x36, 0x61, 0x89, 0xd7, 0x50, 0x94, 0xe4, 0xdd, 0x25, 0xe2, 0xf0, 0x01,
+	0x54, 0x64, 0xeb, 0x45, 0xb7, 0xb5, 0xe0, 0x01, 0x6f, 0x2d, 0x14, 0x77, 0xdd, 0x33, 0x9f, 0x7d,
+	0xdf, 0x0a, 0x88, 0x1a, 0xda, 0x52, 0x4f, 0xad, 0xf0, 0xe7, 0x50, 0x8d, 0x27, 0x28, 0x42, 0x3e,
+	0x84, 0xb2, 0x25, 0x76, 0xfb, 0x2f, 0xc9, 0x44, 0xd3, 0xb2, 0x9b, 0x39, 0xeb, 0x32, 0xbd, 0x07,
+	0x56, 0x58, 0x09, 0x1f, 0xc1, 0xeb, 0x67, 0x64, 0x5a, 0x3a, 0x0f, 0xf7, 0xad, 0x01, 0xd5, 0xf0,
+	0xd3, 0x36, 0x1b, 0x9e, 0x81, 0x1c, 0x61, 0x58, 0x9f, 0xe2, 0xeb, 0x3b, 0xb6, 0x50, 0x9f, 0x52,
+	0xaf, 0x1c, 0x02, 0x38, 0xb7, 0xd1, 0x07, 0x00, 0xd3, 0x18, 0xa5, 0x30, 0x85, 0x2d, 0x94, 0xc2,
+	0x0a, 0xf8, 0x18, 0xaa, 0x92, 0xf7, 0xb9, 0x9a, 0x08, 0x15, 0x43, 0x49, 0x66, 0x44, 0x31, 0xa8,
+	0xdc, 0xc9, 0x57, 0x0c, 0x9d, 0xa6, 0xa3, 0x4f, 0xfe, 0xd8, 0x80, 0xc5, 0xf3, 0xd3, 0x67, 0x68,
+	0x02, 0xeb, 0x33, 0x52, 0x84, 0x1a, 0xe9, 0x05, 0xd2, 0xf4, 0xca, 0xcc, 0x97, 0x27, 0x5c, 0xff,
+	0xee, 0xf7, 0x3f, 0x7f, 0x5c, 0x78, 0x88, 0xd7, 0xf8, 0x17, 0x50, 0x25, 0x55, 0xb4, 0x1b, 0xaa,
+	0xe9, 0x2f, 0x86, 0x9c, 0xa8, 0x84, 0x2a, 0xa1, 0x93, 0xf4, 0xba, 0x79, 0x12, 0x67, 0x76, 0xee,
+	0x94, 0x23, 0x07, 0x51, 0x23, 0x44, 0x0f, 0xc4, 0x57, 0xe4, 0x04, 0x8e, 0x9f, 0x0d, 0x31, 0x66,
+	0x09, 0x7b, 0x6f, 0xa7, 0xdf, 0x95, 0x2d, 0x75, 0xe6, 0x9c, 0xd2, 0x84, 0xf7, 0x05, 0xa0, 0x3d,
+	0xb4, 0xc3, 0x01, 0x7d, 0xcd, 0x9f, 0xfe, 0xfd, 0x04, 0xac, 0x56, 0xe3, 0x1b, 0xf4, 0x6b, 0x38,
+	0xd4, 0x09, 0x70, 0x9d, 0xbc, 0x07, 0xfc, 0xaf, 0xf8, 0x5a, 0x02, 0xdf, 0x11, 0x16, 0x84, 0x25,
+	0x78, 0xed, 0x26, 0x94, 0x15, 0xfd, 0x60, 0xe8, 0x39, 0x9f, 0x17, 0x68, 0xae, 0x10, 0x9b, 0xd5,
+	0x84, 0x89, 0x3f, 0xe5, 0xbf, 0x34, 0x34, 0x71, 0x8d, 0x22, 0xe2, 0x3c, 0x28, 0x85, 0x02, 0x8d,
+	0xf6, 0xb3, 0x67, 0x26, 0xaa, 0xea, 0xe6, 0x41, 0x61, 0x9c, 0x9a, 0xa7, 0x8a, 0x40, 0x51, 0x46,
+	0x25, 0x8e, 0x42, 0x48, 0x39, 0xba, 0x82, 0x55, 0x25, 0xe5, 0xe8, 0x71, 0xe6, 0xd8, 0x44, 0xb4,
+	0xd7, 0xcc, 0x91, 0x6c, 0x6c, 0x8a, 0xfa, 0xdb, 0x08, 0x4d, 0xbb, 0x14, 0xb7, 0xf0, 0xce, 0xae,
+	0x01, 0xa6, 0x6e, 0x80, 0x0e, 0xf2, 0xa6, 0x60, 0xde, 0xeb, 0x1e, 0x8a, 0xeb, 0x2a, 0x78, 0xda,
+	0x4e, 0x57, 0x98, 0x06, 0x72, 0x00, 0xa6, 0xa6, 0x91, 0x75, 0x57, 0xc2, 0x56, 0x32, 0x1f, 0x4f,
+	0xb5, 0xd5, 0x48, 0x6b, 0xeb, 0xd6, 0x80, 0x8d, 0x59, 0x1b, 0x41, 0x6f, 0x67, 0x3f, 0x47, 0xc2,
+	0x9d, 0xcc, 0xe3, 0xf9, 0x82, 0xd5, 0x03, 0x1e, 0x08, 0x24, 0x6f, 0xa2, 0x5d, 0x81, 0x44, 0xda,
+	0x41, 0x88, 0xa5, 0x35, 0x35, 0x20, 0xf4, 0xbd, 0x01, 0x6b, 0x51, 0x07, 0x42, 0x47, 0x99, 0x8f,
+	0x1b, 0x17, 0x78, 0xb3, 0xc8, 0x26, 0x62, 0x28, 0xa2, 0x7c, 0x44, 0x20, 0x70, 0x72, 0x7e, 0x32,
+	0x60, 0x33, 0xe6, 0x6d, 0xe8, 0xb8, 0x40, 0xc0, 0xef, 0x88, 0xa5, 0x23, 0xb0, 0xbc, 0x83, 0x8b,
+	0x18, 0xe9, 0x46, 0xec, 0x10, 0x7d, 0x6b, 0xc0, 0x66, 0xcc, 0xdd, 0xb2, 0x70, 0xa5, 0x9b, 0x60,
+	0xe6, 0xa8, 0x28, 0x6a, 0x1a, 0x85, 0xd4, 0x84, 0xc6, 0xa6, 0x7f, 0x64, 0xe4, 0x1a, 0xdb, 0xac,
+	0xad, 0x9a, 0xf9, 0x2e, 0x3a, 0x6b, 0x6c, 0xca, 0x51, 0x69, 0x57, 0x7b, 0xeb, 0xe5, 0x8a, 0xc0,
+	0xdc, 0xf9, 0x37, 0x00, 0x00, 0xff, 0xff, 0x2a, 0xbf, 0x66, 0x97, 0x8a, 0x11, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -903,6 +1190,10 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type IAMClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*Account, error)
+	ListIdentityProviders(ctx context.Context, in *ListIdentityProvidersRequest, opts ...grpc.CallOption) (*ListIdentityProvidersResponse, error)
+	GetIdentityProvider(ctx context.Context, in *GetIdentityProviderRequest, opts ...grpc.CallOption) (*IdentityProvider, error)
+	CreateIdentityProvider(ctx context.Context, in *CreateIdentityProviderRequest, opts ...grpc.CallOption) (*IdentityProvider, error)
+	DeleteIdentityProvider(ctx context.Context, in *DeleteIdentityProviderRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*User, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*User, error)
@@ -925,6 +1216,42 @@ func NewIAMClient(cc *grpc.ClientConn) IAMClient {
 func (c *iAMClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*Account, error) {
 	out := new(Account)
 	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/CreateAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *iAMClient) ListIdentityProviders(ctx context.Context, in *ListIdentityProvidersRequest, opts ...grpc.CallOption) (*ListIdentityProvidersResponse, error) {
+	out := new(ListIdentityProvidersResponse)
+	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/ListIdentityProviders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *iAMClient) GetIdentityProvider(ctx context.Context, in *GetIdentityProviderRequest, opts ...grpc.CallOption) (*IdentityProvider, error) {
+	out := new(IdentityProvider)
+	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/GetIdentityProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *iAMClient) CreateIdentityProvider(ctx context.Context, in *CreateIdentityProviderRequest, opts ...grpc.CallOption) (*IdentityProvider, error) {
+	out := new(IdentityProvider)
+	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/CreateIdentityProvider", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *iAMClient) DeleteIdentityProvider(ctx context.Context, in *DeleteIdentityProviderRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/jsonmultiplex.iam.v0.IAM/DeleteIdentityProvider", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1015,6 +1342,10 @@ func (c *iAMClient) CreateSession(ctx context.Context, in *CreateSessionRequest,
 // IAMServer is the server API for IAM service.
 type IAMServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*Account, error)
+	ListIdentityProviders(context.Context, *ListIdentityProvidersRequest) (*ListIdentityProvidersResponse, error)
+	GetIdentityProvider(context.Context, *GetIdentityProviderRequest) (*IdentityProvider, error)
+	CreateIdentityProvider(context.Context, *CreateIdentityProviderRequest) (*IdentityProvider, error)
+	DeleteIdentityProvider(context.Context, *DeleteIdentityProviderRequest) (*empty.Empty, error)
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
 	GetUser(context.Context, *GetUserRequest) (*User, error)
 	CreateUser(context.Context, *CreateUserRequest) (*User, error)
@@ -1032,6 +1363,18 @@ type UnimplementedIAMServer struct {
 
 func (*UnimplementedIAMServer) CreateAccount(ctx context.Context, req *CreateAccountRequest) (*Account, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAccount not implemented")
+}
+func (*UnimplementedIAMServer) ListIdentityProviders(ctx context.Context, req *ListIdentityProvidersRequest) (*ListIdentityProvidersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListIdentityProviders not implemented")
+}
+func (*UnimplementedIAMServer) GetIdentityProvider(ctx context.Context, req *GetIdentityProviderRequest) (*IdentityProvider, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetIdentityProvider not implemented")
+}
+func (*UnimplementedIAMServer) CreateIdentityProvider(ctx context.Context, req *CreateIdentityProviderRequest) (*IdentityProvider, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateIdentityProvider not implemented")
+}
+func (*UnimplementedIAMServer) DeleteIdentityProvider(ctx context.Context, req *DeleteIdentityProviderRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteIdentityProvider not implemented")
 }
 func (*UnimplementedIAMServer) ListUsers(ctx context.Context, req *ListUsersRequest) (*ListUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
@@ -1079,6 +1422,78 @@ func _IAM_CreateAccount_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(IAMServer).CreateAccount(ctx, req.(*CreateAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IAM_ListIdentityProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListIdentityProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IAMServer).ListIdentityProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jsonmultiplex.iam.v0.IAM/ListIdentityProviders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IAMServer).ListIdentityProviders(ctx, req.(*ListIdentityProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IAM_GetIdentityProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetIdentityProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IAMServer).GetIdentityProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jsonmultiplex.iam.v0.IAM/GetIdentityProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IAMServer).GetIdentityProvider(ctx, req.(*GetIdentityProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IAM_CreateIdentityProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateIdentityProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IAMServer).CreateIdentityProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jsonmultiplex.iam.v0.IAM/CreateIdentityProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IAMServer).CreateIdentityProvider(ctx, req.(*CreateIdentityProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IAM_DeleteIdentityProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteIdentityProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IAMServer).DeleteIdentityProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/jsonmultiplex.iam.v0.IAM/DeleteIdentityProvider",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IAMServer).DeleteIdentityProvider(ctx, req.(*DeleteIdentityProviderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1252,6 +1667,22 @@ var _IAM_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateAccount",
 			Handler:    _IAM_CreateAccount_Handler,
+		},
+		{
+			MethodName: "ListIdentityProviders",
+			Handler:    _IAM_ListIdentityProviders_Handler,
+		},
+		{
+			MethodName: "GetIdentityProvider",
+			Handler:    _IAM_GetIdentityProvider_Handler,
+		},
+		{
+			MethodName: "CreateIdentityProvider",
+			Handler:    _IAM_CreateIdentityProvider_Handler,
+		},
+		{
+			MethodName: "DeleteIdentityProvider",
+			Handler:    _IAM_DeleteIdentityProvider_Handler,
 		},
 		{
 			MethodName: "ListUsers",

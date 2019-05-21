@@ -57,6 +57,105 @@ func (s *DBStore) CreateAccount(ctx context.Context, in CreateAccountRequest) (m
 	}, nil
 }
 
+type dbIdentityProvider struct {
+	ID              string     `db:"id"`
+	CreateTime      time.Time  `db:"create_time"`
+	UpdateTime      time.Time  `db:"update_time"`
+	DeleteTime      *time.Time `db:"delete_time"`
+	SAMLMetadataURL string     `db:"saml_metadata_url"`
+	UserIDAttribute string     `db:"user_id_attribute"`
+}
+
+func (s *DBStore) ListIdentityProviders(ctx context.Context, in ListIdentityProvidersRequest) (ListIdentityProvidersResponse, error) {
+	var dbIdentityProviders []dbIdentityProvider
+	err := s.DB.SelectContext(ctx, &dbIdentityProviders, `
+		SELECT
+			id, create_time, update_time, delete_time, saml_metadata_url, user_id_attribute
+		FROM
+			identity_providers
+		WHERE
+			account_id = $1
+	`, in.AccountID)
+
+	if err != nil {
+		return ListIdentityProvidersResponse{}, fmt.Errorf("failed to select identityProvider: %v", err)
+	}
+
+	identityProviders := make([]models.IdentityProvider, len(dbIdentityProviders))
+	for i, identityProvider := range dbIdentityProviders {
+		identityProviders[i] = models.IdentityProvider{
+			ID:              identityProvider.ID,
+			CreateTime:      identityProvider.CreateTime,
+			UpdateTime:      identityProvider.UpdateTime,
+			DeleteTime:      identityProvider.DeleteTime,
+			SAMLMetadataURL: identityProvider.SAMLMetadataURL,
+			UserIDAttribute: identityProvider.UserIDAttribute,
+		}
+	}
+
+	return ListIdentityProvidersResponse{IdentityProviders: identityProviders}, nil
+}
+
+func (s *DBStore) GetIdentityProvider(ctx context.Context, in GetIdentityProviderRequest) (models.IdentityProvider, error) {
+	var dbIdentityProvider dbIdentityProvider
+	err := s.DB.GetContext(ctx, &dbIdentityProvider, `
+		SELECT
+			id, create_time, update_time, delete_time, saml_metadata_url, user_id_attribute
+		FROM
+			identity_providers
+		WHERE
+			account_id = $1 AND id = $2
+	`, in.AccountID, in.ID)
+
+	if err != nil {
+		return models.IdentityProvider{}, fmt.Errorf("failed to select identityProvider: %v", err)
+	}
+
+	return models.IdentityProvider{
+		ID:              dbIdentityProvider.ID,
+		CreateTime:      dbIdentityProvider.CreateTime,
+		UpdateTime:      dbIdentityProvider.UpdateTime,
+		DeleteTime:      dbIdentityProvider.DeleteTime,
+		SAMLMetadataURL: dbIdentityProvider.SAMLMetadataURL,
+		UserIDAttribute: dbIdentityProvider.UserIDAttribute,
+	}, nil
+}
+
+func (s *DBStore) CreateIdentityProvider(ctx context.Context, in CreateIdentityProviderRequest) (models.IdentityProvider, error) {
+	createTime := time.Now()
+
+	_, err := s.DB.ExecContext(ctx, `
+		INSERT INTO identity_providers
+			(account_id, id, create_time, update_time, delete_time, saml_metadata_url, user_id_attribute)
+		VALUES
+			($1, $2, $3, $3, NULL, $4, $5)
+	`, in.AccountID, in.IdentityProvider.ID, createTime, in.IdentityProvider.SAMLMetadataURL, in.IdentityProvider.UserIDAttribute)
+
+	if err != nil {
+		return models.IdentityProvider{}, fmt.Errorf("failed to insert identityProvider into db: %v", err)
+	}
+
+	return models.IdentityProvider{
+		ID:              in.IdentityProvider.ID,
+		CreateTime:      createTime,
+		UpdateTime:      createTime,
+		SAMLMetadataURL: in.IdentityProvider.SAMLMetadataURL,
+		UserIDAttribute: in.IdentityProvider.UserIDAttribute,
+	}, nil
+}
+
+func (s *DBStore) DeleteIdentityProvider(ctx context.Context, in DeleteIdentityProviderRequest) error {
+	_, err := s.DB.ExecContext(ctx, `
+		DELETE FROM identity_providers WHERE account_id = $1 AND id = $2
+	`, in.AccountID, in.ID)
+
+	if err != nil {
+		return fmt.Errorf("failed to delete identityProvider from db: %v", err)
+	}
+
+	return nil
+}
+
 type dbUser struct {
 	ID           string     `db:"id"`
 	CreateTime   time.Time  `db:"create_time"`

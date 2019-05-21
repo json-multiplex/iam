@@ -33,6 +33,68 @@ func (s *StoreService) CreateAccount(ctx context.Context, in CreateAccountReques
 	return account, err
 }
 
+func (s *StoreService) ListIdentityProviders(ctx context.Context, in ListIdentityProvidersRequest) (ListIdentityProvidersResponse, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return ListIdentityProvidersResponse{}, err
+	}
+
+	identityProvidersList, err := s.Store.ListIdentityProviders(ctx, store.ListIdentityProvidersRequest{AccountID: claims.Audience})
+	if err != nil {
+		return ListIdentityProvidersResponse{}, fmt.Errorf("error from store: %v", err)
+	}
+
+	return ListIdentityProvidersResponse{IdentityProviders: identityProvidersList.IdentityProviders}, nil
+}
+
+func (s *StoreService) GetIdentityProvider(ctx context.Context, in GetIdentityProviderRequest) (models.IdentityProvider, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return models.IdentityProvider{}, err
+	}
+
+	identityProvider, err := s.Store.GetIdentityProvider(ctx, store.GetIdentityProviderRequest{
+		AccountID: claims.Audience,
+		ID:        in.ID,
+	})
+
+	if err != nil {
+		return models.IdentityProvider{}, fmt.Errorf("error from store: %v", err)
+	}
+
+	return identityProvider, nil
+}
+
+func (s *StoreService) CreateIdentityProvider(ctx context.Context, in CreateIdentityProviderRequest) (models.IdentityProvider, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return models.IdentityProvider{}, err
+	}
+
+	return s.Store.CreateIdentityProvider(ctx, store.CreateIdentityProviderRequest{
+		AccountID:        claims.Audience,
+		IdentityProvider: in.IdentityProvider,
+	})
+}
+
+func (s *StoreService) DeleteIdentityProvider(ctx context.Context, in DeleteIdentityProviderRequest) error {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return err
+	}
+
+	err = s.Store.DeleteIdentityProvider(ctx, store.DeleteIdentityProviderRequest{
+		AccountID: claims.Audience,
+		ID:        in.ID,
+	})
+
+	if err != nil {
+		return fmt.Errorf("error from store: %v", err)
+	}
+
+	return nil
+}
+
 func (s *StoreService) ListUsers(ctx context.Context, in ListUsersRequest) (ListUsersResponse, error) {
 	claims, err := s.parseToken(in.Token)
 	if err != nil {
