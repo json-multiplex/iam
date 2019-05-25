@@ -18,6 +18,7 @@ type StoreService struct {
 	TokenExpirationPeriod time.Duration
 	TokenSignKey          *rsa.PrivateKey
 	TokenVerifyKey        *rsa.PublicKey
+	SAMLVerifyKey         *rsa.PublicKey
 }
 
 func (s *StoreService) CreateAccount(ctx context.Context, in CreateAccountRequest) (models.Account, error) {
@@ -225,6 +226,74 @@ func (s *StoreService) DeleteAccessKey(ctx context.Context, in DeleteAccessKeyRe
 	return nil
 }
 
+func (s *StoreService) ListSAMLUsers(ctx context.Context, in ListSAMLUsersRequest) (ListSAMLUsersResponse, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return ListSAMLUsersResponse{}, err
+	}
+
+	samlUsersList, err := s.Store.ListSAMLUsers(ctx, store.ListSAMLUsersRequest{
+		AccountID:          claims.Audience,
+		IdentityProviderID: in.IdentityProviderID,
+	})
+
+	if err != nil {
+		return ListSAMLUsersResponse{}, fmt.Errorf("error from store: %v", err)
+	}
+
+	return ListSAMLUsersResponse{SAMLUsers: samlUsersList.SAMLUsers}, nil
+}
+
+func (s *StoreService) GetSAMLUser(ctx context.Context, in GetSAMLUserRequest) (models.SAMLUser, error) {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return models.SAMLUser{}, err
+	}
+
+	samlUser, err := s.Store.GetSAMLUser(ctx, store.GetSAMLUserRequest{
+		AccountID:          claims.Audience,
+		IdentityProviderID: in.IdentityProviderID,
+		ID:                 in.ID,
+	})
+
+	if err != nil {
+		return models.SAMLUser{}, fmt.Errorf("error from store: %v", err)
+	}
+
+	return samlUser, nil
+}
+
+func (s *StoreService) CreateSAMLUser(ctx context.Context, in CreateSAMLUserRequest) (models.SAMLUser, error) {
+	claims, err := s.parseTokenWithKey(s.SAMLVerifyKey, in.Token)
+	if err != nil {
+		return models.SAMLUser{}, err
+	}
+
+	return s.Store.CreateSAMLUser(ctx, store.CreateSAMLUserRequest{
+		AccountID: claims.Audience,
+		SAMLUser:  in.SAMLUser,
+	})
+}
+
+func (s *StoreService) DeleteSAMLUser(ctx context.Context, in DeleteSAMLUserRequest) error {
+	claims, err := s.parseToken(in.Token)
+	if err != nil {
+		return err
+	}
+
+	err = s.Store.DeleteSAMLUser(ctx, store.DeleteSAMLUserRequest{
+		AccountID:          claims.Audience,
+		IdentityProviderID: in.IdentityProviderID,
+		ID:                 in.ID,
+	})
+
+	if err != nil {
+		return fmt.Errorf("error from store: %v", err)
+	}
+
+	return nil
+}
+
 func (s *StoreService) CreateSession(ctx context.Context, in CreateSessionRequest) (models.Session, error) {
 	session, err := s.Store.CreateSession(ctx, store.CreateSessionRequest{Session: in.Session})
 	if err != nil {
@@ -264,13 +333,17 @@ func (s *StoreService) CreateSession(ctx context.Context, in CreateSessionReques
 }
 
 func (s *StoreService) parseToken(token string) (*jwt.StandardClaims, error) {
+	return s.parseTokenWithKey(s.TokenVerifyKey, token)
+}
+
+func (s *StoreService) parseTokenWithKey(verifyKey *rsa.PublicKey, token string) (*jwt.StandardClaims, error) {
 	parsed, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			msg := fmt.Sprintf("unexpected token signing method: %v", token.Header["alg"])
 			return nil, status.Error(codes.Unauthenticated, msg)
 		}
 
-		return s.TokenVerifyKey, nil
+		return verifyKey, nil
 	})
 
 	return parsed.Claims.(*jwt.StandardClaims), err

@@ -13,31 +13,6 @@ service IAM {
     };
   }
 
-  rpc ListIdentityProviders(ListIdentityProvidersRequest) returns (ListIdentityProvidersResponse) {
-    option (google.api.http) = {
-      get: "/v0/identityProviders"
-    };
-  }
-
-  rpc GetIdentityProvider(GetIdentityProviderRequest) returns (IdentityProvider) {
-    option (google.api.http) = {
-      get: "/v0/{name=identityProviders/*}"
-    };
-  }
-
-  rpc CreateIdentityProvider(CreateIdentityProviderRequest) returns (IdentityProvider) {
-    option (google.api.http) = {
-      post: "/v0/IdentityProviders"
-      body: "identityProvider"
-    };
-  }
-
-  rpc DeleteIdentityProvider(DeleteIdentityProviderRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      delete: "/v0/{name=identityProviders/*}"
-    };
-  }
-
   rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {
     option (google.api.http) = {
       get: "/v0/users"
@@ -85,6 +60,56 @@ service IAM {
   rpc DeleteAccessKey(DeleteAccessKeyRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete: "/v0/{name=users/*/accessKeys/*}"
+    };
+  }
+
+  rpc ListIdentityProviders(ListIdentityProvidersRequest) returns (ListIdentityProvidersResponse) {
+    option (google.api.http) = {
+      get: "/v0/identityProviders"
+    };
+  }
+
+  rpc GetIdentityProvider(GetIdentityProviderRequest) returns (IdentityProvider) {
+    option (google.api.http) = {
+      get: "/v0/{name=identityProviders/*}"
+    };
+  }
+
+  rpc CreateIdentityProvider(CreateIdentityProviderRequest) returns (IdentityProvider) {
+    option (google.api.http) = {
+      post: "/v0/IdentityProviders"
+      body: "identityProvider"
+    };
+  }
+
+  rpc DeleteIdentityProvider(DeleteIdentityProviderRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v0/{name=identityProviders/*}"
+    };
+  }
+
+  rpc ListSamlUsers(ListSamlUsersRequest) returns (ListSamlUsersResponse) {
+    option (google.api.http) = {
+      get: "/v0/{parent=identityProviders/*}/samlUsers"
+    };
+  }
+
+  rpc GetSamlUser(GetSamlUserRequest) returns (SamlUser) {
+    option (google.api.http) = {
+      get: "/v0/{name=identityProviders/*/samlUsers/*}"
+    };
+  }
+
+  rpc CreateSamlUser(CreateSamlUserRequest) returns (SamlUser) {
+    option (google.api.http) = {
+      post: "/v0/{parent=identityProviders/*}/samlUsers"
+      body: "saml_user"
+    };
+  }
+
+  rpc DeleteSamlUser(DeleteSamlUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v0/{name=identityProviders/*/samlUsers/*}"
     };
   }
 
@@ -138,6 +163,12 @@ message IdentityProvider {
   string user_id_attribute = 6;
 }
 
+message SamlUser {
+  string name = 1;
+  google.protobuf.Timestamp create_time = 2;
+  google.protobuf.Timestamp update_time = 3;
+}
+
 message Session {
   string name = 1;
   google.protobuf.Timestamp create_time = 2;
@@ -155,24 +186,6 @@ message Session {
 
 message CreateAccountRequest {
   Account account = 1;
-}
-
-message ListIdentityProvidersRequest {}
-
-message ListIdentityProvidersResponse {
-  repeated IdentityProvider identity_providers = 1;
-}
-
-message GetIdentityProviderRequest {
-  string name = 1;
-}
-
-message CreateIdentityProviderRequest {
-  IdentityProvider identity_provider = 1;
-}
-
-message DeleteIdentityProviderRequest {
-  string name = 1;
 }
 
 message ListUsersRequest {}
@@ -212,6 +225,46 @@ message CreateAccessKeyRequest {
 }
 
 message DeleteAccessKeyRequest {
+  string name = 1;
+}
+
+message ListIdentityProvidersRequest {}
+
+message ListIdentityProvidersResponse {
+  repeated IdentityProvider identity_providers = 1;
+}
+
+message GetIdentityProviderRequest {
+  string name = 1;
+}
+
+message CreateIdentityProviderRequest {
+  IdentityProvider identity_provider = 1;
+}
+
+message DeleteIdentityProviderRequest {
+  string name = 1;
+}
+
+message ListSamlUsersRequest {
+  string parent = 1;
+}
+
+message ListSamlUsersResponse {
+  repeated SamlUser saml_users = 1;
+}
+
+message GetSamlUserRequest {
+  string name = 1;
+}
+
+message CreateSamlUserRequest {
+  string parent = 1;
+  string saml_user_id = 2;
+  SamlUser saml_user = 3;
+}
+
+message DeleteSamlUserRequest {
   string name = 1;
 }
 
